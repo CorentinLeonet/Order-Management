@@ -13,9 +13,12 @@ def index():
 @orders_bp.route("/orders/<int:order_id>")
 def show(order_id: int):
     order = orders_repository.get_order_by_id(g.session, order_id)
+    total_price = orders_repository.get_total_price(g.session, order)
+    if total_price is None:
+        total_price = 0
     if order is None:
         return render_template('pages/errors/404.html'), 404
-    return render_template('pages/orders/show.html', order=order)
+    return render_template('pages/orders/show.html', order=order, total_price=total_price)
 
 @orders_bp.route("/orders/new", methods=["GET", "POST"])
 def create():
