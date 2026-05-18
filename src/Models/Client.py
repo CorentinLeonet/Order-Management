@@ -19,10 +19,6 @@ class Client(Base):
         unique=True
     )
 
-    email : Mapped[str] = mapped_column(
-        unique=True
-    )
-
     date_of_creation : Mapped[datetime] = mapped_column(
         DateTime
     )

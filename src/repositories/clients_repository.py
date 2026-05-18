@@ -1,11 +1,12 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from src.Models.Client import Client
+from datetime import datetime
 
 
-def create_client(session: Session, name: str, description: str) -> Client:
+def create_client(session: Session, firstname: str, surname : str, email: str, date_of_creation: datetime) -> Client:
     try:
-        client = Client(name=name, description=description)
+        client = Client(firstname=firstname, surname=surname, email=email, date_of_creation=date_of_creation)
         session.add(client)
         session.commit()
         session.refresh(client)

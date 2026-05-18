@@ -7,6 +7,7 @@ from src.routes.categories_bp import categories_bp
 from src.routes.main_bp import main_bp
 from src.routes.articles_bp import articles_bp
 from src.routes.orders_bp import orders_bp
+from src.routes.clients_bp import clients_bp
 
 if not database_exists(engine.url): create_database(engine.url)
 # Base.metadata.drop_all(engine)
@@ -43,6 +44,7 @@ app.register_blueprint(categories_bp)
 app.register_blueprint(main_bp)
 app.register_blueprint(articles_bp)
 app.register_blueprint(orders_bp)
+app.register_blueprint(clients_bp)
 
     
     
