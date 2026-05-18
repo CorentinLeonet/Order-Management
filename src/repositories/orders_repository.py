@@ -33,6 +33,16 @@ def get_all_orders(session: Session) -> list[Order]:
         session.rollback()
         print(e)
 
+def update_order(session: Session, order: Order, client_id : int, date : datetime, status: str):
+    try:
+        order.client_id = client_id
+        order.date = date
+        order.date = date
+        order.status = status
+        session.commit()
+    except Exception as e:
+        print(e)
+        return False
 
 def update_order_add_line(session: Session, order: Order, article: Article, quantity: int):
     try:
