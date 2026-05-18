@@ -30,15 +30,11 @@
                 <label for="" class="form-label">Status</label>
                 <select
                     class="form-select form-select-lg"
-                    name=""
-                    id=""
+                    name="status"
+                    id="status_select"
                 >  
                     {% for status in all_status %}
-                        {% if {{ order.status }} == {{ status }} %}
-                            <option value="status"  selected>{{ status }}</option>
-                        {% else %}
-                            <option value="status">{{ status }}</option>
-                        {% endif %}>
+                        <option value="status" {% if order.status == status %} selected {% endif %}>{{ status }}</option>
                     {% endfor %}
                 </select>
             </div>

@@ -30,16 +30,16 @@ def close_session(exc):
 
 @app.errorhandler(500)
 def server_error(e):
-    return render_template('/pages/errors/500.html'), 500
+    return render_template('pages/errors/500.html'), 500
 
 @app.errorhandler(404)
 def not_found(e):
-    return render_template('/pages/errors/404.html'), 404
+    return render_template('pages/errors/404.html'), 404
 
 @app.errorhandler(400)
-def not_found(e):
-    return render_template('/pages/errors/400.html'), 400
-        
+def bad_request(e):
+    return render_template('pages/errors/400.html'), 400
+    
 app.register_blueprint(categories_bp)
 app.register_blueprint(main_bp)
 app.register_blueprint(articles_bp)

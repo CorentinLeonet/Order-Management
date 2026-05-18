@@ -8,7 +8,7 @@ main_bp = Blueprint('main', __name__)
 
 @main_bp.route("/")
 def index():
-    return render_template('/pages/index.html', #use sql COUNT for better performance
+    return render_template('pages/index.html', #use sql COUNT for better performance
         order_count=len(orders_repo.get_all_orders(g.session)),
         article_count=len(articles_repo.get_all_articles(g.session)),
         client_count=len(clients_repo.get_all_clients(g.session)),

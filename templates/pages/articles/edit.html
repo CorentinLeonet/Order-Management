@@ -16,11 +16,11 @@
             </div>
             <div class="mb-3">
                 <label class="form-label">Price</label>
-                <textarea name="price" class="form-control" rows="3">{{ article.price }}</textarea>
+                <input type="number" name="price" value="{{ article.price }}" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Stock quantity</label>
-                <textarea name="stock_quantity" class="form-control" rows="3">{{ article.stock_quantity }}</textarea>
+                <input type="number" name="stock_quantity" value="{{ article.sotck_quantity }}" required>
             </div>
             <div class="mb-3">
                 <label for="categories_select" class="form-label">Categories<br>(Select one or many)</label>
@@ -32,7 +32,7 @@
                     id="categories_select"
                 >
                     
-                    {%for category in article.categories%}
+                    {%for category in categories%}
                     <option value="{{category.id}}">{{category.name}}</option>
                     {%endfor%}
 

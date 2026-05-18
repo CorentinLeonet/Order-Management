@@ -23,7 +23,7 @@ def create():
         name = request.form["name"]
         price = request.form["price"]
         stock_quantity = request.form["stock_quantity"]
-        categories_id = request.form["categories_id"]
+        categories_id = request.form.getlist("categories_id")
         if categories_id:
             categories = [categories_repository.get_category_by_id(g.session, int(category_id)) for category_id in categories_id]
             articles_repository.create_article(g.session, name, price, stock_quantity, categories)
@@ -38,7 +38,8 @@ def edit(article_id: int):
     article = articles_repository.get_article_by_id(g.session, article_id)
     if article is None:
         return render_template('pages/errors/404.html'), 404
-    return render_template('pages/articles/edit.html', article=article)
+    categories = categories_repository.get_all_categories(g.session)
+    return render_template('pages/articles/edit.html', article=article, categories=categories)
 
 @articles_bp.route("/articles/<int:article_id>/update", methods=["POST"])
 def update(article_id: int):
@@ -50,7 +51,7 @@ def update(article_id: int):
     stock_quantity = request.form["stock_quantity"]
     categories = request.form["categories"]
     articles_repository.update_article(g.session, article, name, price, stock_quantity, categories)
-    return redirect(url_for('articless.index'))
+    return redirect(url_for('articles.index'))
 
 @articles_bp.route("/articles/<int:article_id>/delete", methods=["POST"])
 def delete(article_id: int):

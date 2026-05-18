@@ -14,11 +14,11 @@ def index():
 @orders_bp.route("/orders/<int:order_id>")
 def show(order_id: int):
     order = orders_repository.get_order_by_id(g.session, order_id)
+    if order is None:
+        return render_template('pages/errors/404.html'), 404
     total_price = orders_repository.get_total_price(g.session, order)
     if total_price is None:
         total_price = 0
-    if order is None:
-        return render_template('pages/errors/404.html'), 404
     return render_template('pages/orders/show.html', order=order, total_price=total_price)
 
 @orders_bp.route("/orders/new", methods=["GET", "POST"])
@@ -41,14 +41,14 @@ def edit(order_id: int):
 
 @orders_bp.route("/orders/<int:order_id>/update", methods=["POST"])
 def update(order_id: int):
-    article = orders_repository.get_order_by_id(g.session, order_id)
-    if article is None:
+    order = orders_repository.get_order_by_id(g.session, order_id)
+    if order is None:
         return render_template('pages/errors/404.html'), 404
     client_id = request.form["client_id"]
     date = request.form["date"]
     status = request.form["status"]
-    orders_repository.update_order(g.session, client_id, date, status)
-    return redirect(url_for('articless.index'))
+    orders_repository.update_order(g.session, order, client_id, date, status)
+    return redirect(url_for('orders.index'))
 
 @orders_bp.route("/orders/<int:order_id>/delete", methods=["POST"])
 def delete(order_id: int):
