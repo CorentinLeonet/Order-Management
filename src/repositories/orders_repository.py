@@ -6,9 +6,9 @@ from src.Models.Article import Article
 from src.Models.Order_Line import Order_Line
 
 
-def create_order(session: Session, client_id: int, date: datetime, status=Order_Status_Enum.PENDING.value) -> Order:
+def create_order(session: Session, client_id: int, date_ordered: datetime, status=Order_Status_Enum.PENDING.value) -> Order:
     try:
-        order = Order(client_id=client_id, date=date, status=status)
+        order = Order(client_id=client_id, date_ordered=date_ordered, status=status)
         session.add(order)
         session.commit()
         session.refresh(order)
@@ -33,11 +33,12 @@ def get_all_orders(session: Session) -> list[Order]:
         session.rollback()
         print(e)
 
-def update_order(session: Session, order: Order, client_id : int, date : datetime, status: str):
+def update_order(session: Session, order: Order, client_id : int, date_ordered : datetime, status: str, date_shipped: datetime, date_recieved : datetime) :
     try:
         order.client_id = client_id
-        order.date = date
-        order.date = date
+        order.date_ordered = date_ordered
+        order.date_shipped = date_shipped
+        order.date_recieved = date_recieved
         order.status = status
         session.commit()
     except Exception as e:

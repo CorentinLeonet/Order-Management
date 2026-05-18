@@ -22,7 +22,15 @@ class Order(Base):
         ForeignKey("clients.id")
     )
 
-    date : Mapped[datetime] = mapped_column(
+    date_ordered : Mapped[datetime] = mapped_column(
+        DateTime
+    )
+
+    date_shipped : Mapped[datetime : None] = mapped_column(
+        DateTime
+    )
+
+    date_recieved : Mapped[datetime : None] = mapped_column(
         DateTime
     )
 
