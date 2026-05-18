@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, g, redirect, url_for, request
 import src.repositories.orders_repository as orders_repository
 import src.repositories.clients_repository as clients_repository
+from src.Models.Order import Order_Status_Enum
 from datetime import datetime
 
 orders_bp = Blueprint('orders', __name__)
@@ -33,9 +34,10 @@ def create():
 @orders_bp.route("/orders/<int:order_id>/edit")
 def edit(order_id: int):
     order = orders_repository.get_order_by_id(g.session, order_id)
+    all_status = Order_Status_Enum._member_map_.values()
     if order is None:
         return render_template('pages/errors/404.html'), 404
-    return render_template('pages/orders/edit.html', order=order)
+    return render_template('pages/orders/edit.html', order=order, all_status=all_status)
 
 @orders_bp.route("/orders/<int:order_id>/update", methods=["POST"])
 def update(order_id: int):
