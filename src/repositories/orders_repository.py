@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import select
+from sqlalchemy import select, func
 from src.Models.Order import Order, Order_Status_Enum
 from datetime import datetime
 from src.Models.Article import Article
@@ -22,7 +22,6 @@ def get_order_by_id(session: Session, id: int) -> Order:
         stmt = select(Order).where(Order.id == id)
         return session.execute(stmt).scalar_one_or_none()
     except Exception as e:
-        session.rollback()
         print(e)
 
 def get_all_orders(session: Session) -> list[Order]:
@@ -30,7 +29,13 @@ def get_all_orders(session: Session) -> list[Order]:
         stmt = select(Order)
         return session.execute(stmt).scalars().all()
     except Exception as e:
-        session.rollback()
+        print(e)
+
+def get_total_price(session: Session, order: Order):
+    try:
+        stmt = select(func.sum(Order_Line.unit_price)).where(Order_Line.order_id == order.id)
+        return session.execute(stmt).scalar_one_or_none()
+    except Exception as e:
         print(e)
 
 def update_order(session: Session, order: Order, client_id : int, date_ordered : datetime, status: str, date_shipped: datetime, date_recieved : datetime) :
