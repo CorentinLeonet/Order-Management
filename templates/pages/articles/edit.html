@@ -9,7 +9,7 @@
 
 <div class="card">
     <div class="card-body">
-        <form action="{{ url_for('article.update', article_id=article.id) }}" method="POST">
+        <form action="{{ url_for('articles.update', article_id=article.id) }}" method="POST">
             <div class="mb-3">
                 <label class="form-label">Name</label>
                 <input type="text" name="name" class="form-control" value="{{ article.name }}" required>
@@ -23,8 +23,20 @@
                 <textarea name="stock_quantity" class="form-control" rows="3">{{ article.stock_quantity }}</textarea>
             </div>
             <div class="mb-3">
-                <label class="form-label">Categories</label>
-                <textarea name="categories" class="form-control" rows="3">{{ article.categories }}</textarea>
+                <label for="categories_select" class="form-label">Categories<br>(Select one or many)</label>
+
+                <select
+                    multiple
+                    class="form-select form-select-lg"
+                    name="categories_id"
+                    id="categories_select"
+                >
+                    
+                    {%for category in article.categories%}
+                    <option value="{{category.id}}">{{category.name}}</option>
+                    {%endfor%}
+
+                </select>
             </div>
             <button type="submit" class="btn btn-primary">Save</button>
         </form>

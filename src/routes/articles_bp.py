@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, g, redirect, url_for, request
 import src.repositories.articles_repository as articles_repository
+import src.repositories.categories_repository as categories_repository
 
 articles_bp = Blueprint('articles', __name__)
 
@@ -17,14 +18,20 @@ def show(article_id: int):
 
 @articles_bp.route("/articles/new", methods=["GET", "POST"])
 def create():
+    error=None
     if request.method == "POST":
         name = request.form["name"]
         price = request.form["price"]
         stock_quantity = request.form["stock_quantity"]
-        categories = request.form["categories"]
-        articles_repository.create_article(g.session, name, price, stock_quantity, categories)
-        return redirect(url_for('articles.index'))
-    return render_template('pages/articles/new.html')
+        categories_id = request.form["categories_id"]
+        if categories_id:
+            categories = [categories_repository.get_category_by_id(g.session, int(category_id)) for category_id in categories_id]
+            articles_repository.create_article(g.session, name, price, stock_quantity, categories)
+            return redirect(url_for('articles.index'))
+        else:
+            error = "Select at least one category"
+    categories = categories_repository.get_all_categories(g.session)
+    return render_template('pages/articles/new.html', categories=categories, error=error)
 
 @articles_bp.route("/articles/<int:article_id>/edit")
 def edit(article_id: int):
