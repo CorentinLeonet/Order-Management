@@ -28,6 +28,18 @@ def get_all_clients(session: Session) -> list[Client]:
     except Exception as e:
         print(e)
 
+def update_client(session: Session, client:Client, firstname: str, surname: str, email: str, date_of_creation: datetime):
+    try:
+        client.firstname = firstname
+        client.surname = surname
+        client.email = email
+        client.date_of_creation = date_of_creation
+        session.commit()
+    except Exception as e:
+        print(e)
+        return False
+    return True
+
 def delete_client(session: Session, client: Client) -> None:
     try:
         session.delete(client)

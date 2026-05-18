@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="mb-0">Edit {{ category.firstname }} {{client.surname}}</h1>
+    <h1 class="mb-0">Edit {{ client.firstname }} {{client.surname}}</h1>
     <a href="{{ url_for('clients.show', client_id=client.id) }}" class="btn btn-outline-secondary">Back</a>
 </div>
 
@@ -24,7 +24,7 @@
             </div>
             <div class="mb-3" hidden>
                 <label class="form-label">Date of creation</label>
-                <input type="text" name="date_of_creation" class="form-control" value="{{ client.date_of_creation }}" required>
+                <input type="datetime" name="date_of_creation" class="form-control" value="{{ client.date_of_creation }}" required>
             </div>
             <button type="submit" class="btn btn-primary">Save</button>
         </form>

@@ -39,7 +39,6 @@ def update(client_id: int):
     client = clients_repository.get_client_by_id(g.session, client_id)
     if client is None:
         return render_template('pages/errors/404.html'), 404
-    name = request.form["name"]
     firstname = request.form["firstname"]
     surname = request.form["surname"]
     email = request.form["email"]
