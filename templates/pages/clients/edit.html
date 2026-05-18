@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Edit {{ client.firstname }} {{client.surname}}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">Edit {{ category.firstname }} {{client.surname}}</h1>
+    <a href="{{ url_for('clients.show', client_id=client.id) }}" class="btn btn-outline-secondary">Back</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form action="{{ url_for('clients.update', client_id=client.id) }}" method="POST">
+            <div class="mb-3">
+                <label class="form-label">Firstname</label>
+                <input type="text" name="firstname" class="form-control" value="{{ client.firstname }}" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Surname</label>
+                <input type="text" name="surname" class="form-control" value="{{ client.surname }}" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="text" name="email" class="form-control" value="{{ client.email }}" required>
+            </div>
+            <div class="mb-3" hidden>
+                <label class="form-label">Date of creation</label>
+                <input type="text" name="date_of_creation" class="form-control" value="{{ client.date_of_creation }}" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

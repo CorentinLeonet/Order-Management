@@ -1,0 +1,5 @@
+categories <- articles <-  order_lines -> orders -> clients   users
+graph google charts pour voir les stats 
+facture pdf
+
+afficher les events de remises en stock

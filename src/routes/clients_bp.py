@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, g, redirect, url_for, request
 import src.repositories.clients_repository as clients_repository
+from datetime import datetime
 
 clients_bp = Blueprint('clients', __name__)
 
@@ -21,7 +22,7 @@ def create():
         firstname = request.form["firstname"]
         surname = request.form["surname"]
         email = request.form["email"]
-        date_of_creation = request.form["date_of_creation"]
+        date_of_creation = datetime.now()
         clients_repository.create_client(g.session, firstname, surname, email, date_of_creation)
         return redirect(url_for('clients.index'))
     return render_template('pages/clients/new.html')

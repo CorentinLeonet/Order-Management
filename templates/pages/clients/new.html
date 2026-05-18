@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}New client{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">New client</h1>
+    <a href="{{ url_for('clients.index') }}" class="btn btn-outline-secondary">Back</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form action="{{ url_for('clients.create') }}" method="POST">
+            <div class="mb-3">
+                <label class="form-label">Firsname</label>
+                <input type="text" name="firstname" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Surname</label>
+                <input type="text" name="surname" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="text" name="surname" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
