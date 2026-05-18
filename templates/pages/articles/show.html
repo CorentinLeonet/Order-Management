@@ -24,7 +24,11 @@
 <div class="card">
     <div class="card-body">
         <p class="text-muted mb-1">Categories</p>
-        <p>{{ article.categories }}</p>
+        <li>
+            {%for category in article.categories%}
+            <p>{{ category.name }}</p>
+            {%endfor%}
+        </li>
     </div>
 </div>
 

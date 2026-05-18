@@ -6,6 +6,7 @@ from src.Models import *
 from src.routes.categories_bp import categories_bp
 from src.routes.main_bp import main_bp
 from src.routes.articles_bp import articles_bp
+from src.routes.orders_bp import orders_bp
 
 if not database_exists(engine.url): create_database(engine.url)
 # Base.metadata.drop_all(engine)
@@ -33,11 +34,15 @@ def server_error(e):
 @app.errorhandler(404)
 def not_found(e):
     return render_template('/pages/errors/404.html'), 404
+
+@app.errorhandler(400)
+def not_found(e):
+    return render_template('/pages/errors/400.html'), 400
         
 app.register_blueprint(categories_bp)
 app.register_blueprint(main_bp)
 app.register_blueprint(articles_bp)
-
+app.register_blueprint(orders_bp)
 
     
     

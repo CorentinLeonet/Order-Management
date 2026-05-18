@@ -12,19 +12,26 @@
     <thead>
         <tr>
             <th>Name</th>
-            <th>price</th>
-            <th>price</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Categories</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         {% for article in articles %}
         <tr>
-            <td>{{ category.name }}</td>
-            <td class="text-muted">{{ category.description }}</td>
+            <td>{{ article.name }}</td>
+            <td class="text-muted">{{ article.price }}</td>
+            <td class="text-muted">{{ article.stock_quantity }}</td>
+            <td class="text-muted">
+                {%for category in article.categories%}
+                {{ category.name }}
+                {%endfor%}
+            </td>
             <td class="text-end">
                 <a href="{{ url_for('articles.show', article_id=article.id) }}" class="btn btn-sm btn-outline-secondary">View</a>
-                <form action="{{ url_for('articles.delete', article_id=article_id.id) }}" method="POST" class="d-inline">
+                <form action="{{ url_for('articles.delete', article_id=article.id) }}" method="POST" class="d-inline">
                     <button type="submit" class="btn btn-sm btn-outline-danger"
                         onclick="return confirm('Delete {{ article.name }}?')">Delete</button> <!-- modal -->
                 </form>
