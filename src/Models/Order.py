@@ -26,12 +26,14 @@ class Order(Base):
         DateTime
     )
 
-    date_shipped : Mapped[datetime : None] = mapped_column(
-        DateTime
+    date_shipped : Mapped[datetime] = mapped_column(
+        DateTime,
+        nullable=True
     )
 
-    date_recieved : Mapped[datetime : None] = mapped_column(
-        DateTime
+    date_recieved : Mapped[datetime] = mapped_column(
+        DateTime,
+        nullable=True
     )
 
     status : Mapped[str] = mapped_column()
@@ -42,6 +44,7 @@ class Order(Base):
     # )
 
     order_lines = relationship('Order_Line')
+    client = relationship("Client")
     
     def __init__(self, **kw: Any):
         super().__init__(**kw)

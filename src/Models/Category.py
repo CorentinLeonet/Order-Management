@@ -15,8 +15,9 @@ class Category(Base):
         unique=True
     )
 
-    description : Mapped[str : None] = mapped_column(
-        String(50)
+    description : Mapped[str] = mapped_column(
+        String(50),
+        nullable=True
     )
 
     def __init__(self, **kw: Any):

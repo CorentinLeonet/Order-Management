@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, g, redirect, url_for, request
 import src.repositories.orders_repository as orders_repository
+import src.repositories.clients_repository as clients_repository
+from datetime import datetime
 
 orders_bp = Blueprint('orders', __name__)
 
@@ -13,17 +15,17 @@ def show(order_id: int):
     order = orders_repository.get_order_by_id(g.session, order_id)
     if order is None:
         return render_template('pages/errors/404.html'), 404
-    return render_template('pages/orders/show.html', order_id=order)
+    return render_template('pages/orders/show.html', order=order)
 
 @orders_bp.route("/orders/new", methods=["GET", "POST"])
 def create():
     if request.method == "POST":
         client_id = request.form["client_id"]
-        date = request.form["date"]
-        status = request.form["status"]
-        orders_repository.create_order(g.session, client_id, date, status)
+        date_ordered = datetime.now()
+        orders_repository.create_order(g.session, client_id, date_ordered)
         return redirect(url_for('orders.index'))
-    return render_template('pages/orders/new.html')
+    clients = clients_repository.get_all_clients(g.session)
+    return render_template('pages/orders/new.html', clients=clients)
 
 @orders_bp.route("/orders/<int:order_id>/edit")
 def edit(order_id: int):
