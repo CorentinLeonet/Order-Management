@@ -57,14 +57,19 @@
                 </tr>
             </thead>
             <tbody>
-                {% for line in order.order_lines %}
+                {% for order_line in order.order_lines %}
                 <tr>
-                    <td>{{ line.article.name }}</td>
-                    <td>{{ line.unit_price }}</td>
-                    <td>{{ line.quantity }}</td>
-                    <td>{{ line.unit_price * line.quantity }}</td>
+                    <td>{{ order_line.article.name }}</td>
+                    <td>{{ order_line.unit_price }}</td>
+                    <td>
+                        <form action="{{ url_for('orders.update_line', order_id=order.id, order_line_id=order_line.id) }}" method="POST" class="d-flex gap-2 align-items-center">
+                            <input type="number" name="quantity" value="{{ order_line.quantity }}" min="1" class="form-control form-control-sm" style="width: 80px">
+                            <button type="submit" class="btn btn-sm btn-outline-primary">Update</button>
+                        </form>
+                    </td>
+                    <td>{{ order_line.unit_price * order_line.quantity }}</td>
                     <td class="text-end">
-                        <form action="{{ url_for('orders.delete_line', order_id=order.id, line_id=line.id) }}" method="POST" class="d-inline">
+                        <form action="{{ url_for('orders.delete_line', order_id=order.id, order_line_id=order_line.id) }}" method="POST" class="d-inline">
                             <button type="submit" class="btn btn-sm btn-outline-danger"
                                 onclick="return confirm('Remove this line?')">Remove</button>
                         </form>

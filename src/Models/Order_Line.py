@@ -1,7 +1,7 @@
 from typing import Any
 from src.database.database import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey, CheckConstraint, event, inspect
+from sqlalchemy import ForeignKey, CheckConstraint
 
 class Order_Line(Base):
     __tablename__ = "order_lines"
@@ -29,14 +29,3 @@ class Order_Line(Base):
 
     def __init__(self, **kw: Any):
         super().__init__(**kw)
-
-@event.listens_for(Order_Line, 'before_delete')
-def restock_on_line_delete(mapper, connection, target):
-    target.article.stock_quantity += target.quantity
-
-@event.listens_for(Order_Line, 'before_update')
-def restock_on_line_update(mapper, connection, target):
-    history = inspect(target).attrs.quantity.history
-    if history.deleted:
-        old_quantity = history.deleted[0]
-        target.article.stock_quantity += old_quantity - target.quantity

@@ -1,7 +1,7 @@
 from typing import Any
 from src.database.database import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import DateTime, ForeignKey, event, Enum as EnumSQL
+from sqlalchemy import DateTime, ForeignKey, Enum as EnumSQL
 from datetime import datetime
 from enum import Enum
 
@@ -48,9 +48,3 @@ class Order(Base):
     
     def __init__(self, **kw: Any):
         super().__init__(**kw)
-
-@event.listens_for(Order, 'before_update')
-def restock_on_cancel(mapper, connection, target):
-    if target.status == Order_Status_Enum.CANCELLED.value:
-        for line in target.order_lines:
-            line.article.stock_quantity += line.quantity

@@ -16,11 +16,11 @@
             </div>
             <div class="mb-3">
                 <label class="form-label">Price</label>
-                <input type="number" name="price" value="{{ article.price }}" required>
+                <input type="number" name="price" min="0" value="{{ article.price }}" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Stock quantity</label>
-                <input type="number" name="stock_quantity" value="{{ article.sotck_quantity }}" required>
+                <input type="number" name="stock_quantity" min="0" value="{{ article.stock_quantity }}" required>
             </div>
             <div class="mb-3">
                 <label for="categories_select" class="form-label">Categories<br>(Select one or many)</label>

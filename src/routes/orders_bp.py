@@ -32,14 +32,6 @@ def create():
     clients = clients_repository.get_all_clients(g.session)
     return render_template('pages/orders/new.html', clients=clients)
 
-@orders_bp.route("/orders/<int:order_id>/edit")
-def edit(order_id: int):
-    order = orders_repository.get_order_by_id(g.session, order_id)
-    all_status = Order_Status_Enum._member_map_.values()
-    if order is None:
-        return render_template('pages/errors/404.html'), 404
-    return render_template('pages/orders/edit.html', order=order, all_status=all_status)
-
 @orders_bp.route("/orders/<int:order_id>/delete", methods=["POST"])
 def delete(order_id: int):
     if not orders_repository.delete_order_by_id(g.session, order_id):
@@ -90,9 +82,18 @@ def add_line(order_id: int):
     orders_repository.update_order_add_line(g.session, order, article, quantity)
     return redirect(url_for('orders.edit', order_id=order_id))
 
+@orders_bp.route("/orders/<int:order_id>/lines/<int:order_line_id>/update", methods=["POST"])
+def update_line(order_id: int, order_line_id: int):
+    order_line = orders_repository.get_line_by_id(g.session, order_line_id)
+    if order_line is None:
+        return render_template('pages/errors/404.html'), 404
+    quantity = int(request.form["quantity"])
+    orders_repository.update_order_update_order_line_quantity(g.session, order_line, quantity)
+    return redirect(url_for('orders.edit', order_id=order_id))
+
 @orders_bp.route("/orders/<int:order_id>/order_lines/<int:order_line_id>/delete", methods=["POST"])
-def delete_line(order_id: int, line_id: int):
-    line = orders_repository.get_line_by_id(g.session, line_id)
+def delete_line(order_id: int, order_line_id: int):
+    line = orders_repository.get_line_by_id(g.session, order_line_id)
     if line is None:
         return render_template('pages/errors/404.html'), 404
     orders_repository.remove_line(g.session, line)
