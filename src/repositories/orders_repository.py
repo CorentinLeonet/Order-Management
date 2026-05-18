@@ -60,20 +60,6 @@ def update_order_add_line(session: Session, order: Order, article: Article, quan
         session.rollback()
         print(e)   
 
-def update_order_remove_line(session: Session, order: Order, article: Article) -> bool:
-    try:
-        stmt = select(Order_Line).where(Order_Line.article_id == article.id, Order_Line == order.id)
-        order_line = session.execute(stmt)
-        if order_line is None:
-            return False
-        article.stock_quantity += order_line.quantity
-        session.delete(order_line)
-        session.commit()
-        return True
-    except Exception as e:
-        session.rollback()
-        print(e)   
-
 def delete_order(session: Session, order: Order) -> None:
     try:
         session.delete(order)
@@ -95,3 +81,12 @@ def delete_order_by_id(session: Session, id: int) -> bool:
     except Exception as e:
         session.rollback()
         print(e)
+
+def get_line_by_id(session: Session, id: int) -> Order_Line:
+    stmt = select(Order_Line).where(Order_Line.id == id)
+    return session.execute(stmt).scalar_one_or_none()
+
+def remove_line(session: Session, line: Order_Line) -> None:
+    # stock is restored by the before_delete event on Order_Line
+    session.delete(line)
+    session.commit()

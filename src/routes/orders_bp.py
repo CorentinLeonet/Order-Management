@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, g, redirect, url_for, request
 import src.repositories.orders_repository as orders_repository
 import src.repositories.clients_repository as clients_repository
+import src.repositories.articles_repository as articles_repository
 from src.Models.Order import Order_Status_Enum
 from datetime import datetime
 
@@ -39,19 +40,60 @@ def edit(order_id: int):
         return render_template('pages/errors/404.html'), 404
     return render_template('pages/orders/edit.html', order=order, all_status=all_status)
 
-@orders_bp.route("/orders/<int:order_id>/update", methods=["POST"])
-def update(order_id: int):
-    order = orders_repository.get_order_by_id(g.session, order_id)
-    if order is None:
-        return render_template('pages/errors/404.html'), 404
-    client_id = request.form["client_id"]
-    date = request.form["date"]
-    status = request.form["status"]
-    orders_repository.update_order(g.session, order, client_id, date, status)
-    return redirect(url_for('orders.index'))
-
 @orders_bp.route("/orders/<int:order_id>/delete", methods=["POST"])
 def delete(order_id: int):
     if not orders_repository.delete_order_by_id(g.session, order_id):
         return render_template('pages/errors/404.html'), 404
     return redirect(url_for('orders.index'))
+
+@orders_bp.route("/orders/<int:order_id>/edit")
+def edit(order_id: int):
+    order = orders_repository.get_order_by_id(g.session, order_id)
+    if order is None:
+        return render_template('pages/errors/404.html'), 404
+    articles = articles_repository.get_all_articles(g.session)
+    all_status = [s.value for s in Order_Status_Enum]
+    return render_template('pages/orders/edit.html',
+        order=order,
+        articles=articles,
+        all_status=all_status
+    )
+
+@orders_bp.route("/orders/<int:order_id>/update", methods=["POST"])
+def update(order_id: int):
+    order = orders_repository.get_order_by_id(g.session, order_id)
+    if order is None:
+        return render_template('pages/errors/404.html'), 404
+    status = request.form["status"]
+    date_shipped = request.form.get("date_shipped") or None
+    date_recieved = request.form.get("date_recieved") or None
+    if date_shipped:
+        date_shipped = datetime.fromisoformat(date_shipped)
+    if date_recieved:
+        date_recieved = datetime.fromisoformat(date_recieved)
+    orders_repository.update_order(g.session, order,
+        order.client_id, order.date_ordered,
+        status, date_shipped, date_recieved
+    )
+    return redirect(url_for('orders.edit', order_id=order_id))
+
+@orders_bp.route("/orders/<int:order_id>/order_lines/add", methods=["POST"])
+def add_line(order_id: int):
+    order = orders_repository.get_order_by_id(g.session, order_id)
+    if order is None:
+        return render_template('pages/errors/404.html'), 404
+    article_id = int(request.form["article_id"])
+    quantity = int(request.form["quantity"])
+    article = articles_repository.get_article_by_id(g.session, article_id)
+    if article is None or article.stock_quantity < quantity:
+        return redirect(url_for('orders.edit', order_id=order_id))
+    orders_repository.update_order_add_line(g.session, order, article, quantity)
+    return redirect(url_for('orders.edit', order_id=order_id))
+
+@orders_bp.route("/orders/<int:order_id>/order_lines/<int:order_line_id>/delete", methods=["POST"])
+def delete_line(order_id: int, line_id: int):
+    line = orders_repository.get_line_by_id(g.session, line_id)
+    if line is None:
+        return render_template('pages/errors/404.html'), 404
+    orders_repository.remove_line(g.session, line)
+    return redirect(url_for('orders.edit', order_id=order_id))
