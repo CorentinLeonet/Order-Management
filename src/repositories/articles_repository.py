@@ -34,6 +34,18 @@ def delete_article(session: Session, article: Article) -> None:
     except Exception as e:
         print(e)
 
+def update_article(session: Session, article: Article, name: str, price: int, stock_quantity: int, categories: list):
+    try:
+        article.name = name
+        article.price = price
+        article.stock_quantity = stock_quantity
+        article.categories = categories
+        session.commit()
+    except Exception  as e:
+        print(e)
+        return False
+    return True
+
 def delete_article_by_id(session: Session, id: int) -> bool:
     try:
         stmt = select(Article).where(Article.id == id)

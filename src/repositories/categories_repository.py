@@ -55,7 +55,11 @@ def delete_category_by_id(session: Session, id: int) -> bool:
         print(e)
 
 def update_category(session: Session, category: Category, name: str, description: str) -> bool:
-    category.name = name
-    category.description = description
-    session.commit()
+    try:
+        category.name = name
+        category.description = description
+        session.commit()
+    except Exception  as e:
+        print(e)
+        return False
     return True
