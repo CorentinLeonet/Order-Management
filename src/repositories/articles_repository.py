@@ -37,7 +37,7 @@ def get_count_articles(session: Session) -> int:
 
 def get_articles_count_sales(session: Session):
     try: 
-        stmt = select(Article.name, func.sum(Order_Line.quantity)).group_by(Article.name)
+        stmt = select(Article.name, func.sum(Order_Line.quantity)).join(Order_Line, onclause=Order_Line.article_id == Article.id).group_by(Article.name)
         return session.execute(stmt).fetchall()
     except Exception as e:
         print(e)
