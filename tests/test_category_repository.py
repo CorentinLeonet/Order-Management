@@ -1,9 +1,9 @@
-from database.database import Base, engine
+from tests.database.database import engine
+from src.database.database import Base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import database_exists, create_database
 from src.Models import *
 from src.repositories import categories_repository as categories_repository
-import pytest
 
 if not database_exists(engine.url): create_database(engine.url)
 Base.metadata.drop_all(engine)
@@ -17,5 +17,5 @@ def test_create_category():
     category_name = "category_test"
     category_description = "Test description"
     category = categories_repository.create_category(session, category_name, category_description )
-    assert category.name == category_description
+    assert category.name == category_name
     assert category.description == category_description

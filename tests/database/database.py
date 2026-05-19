@@ -1,5 +1,4 @@
 from dotenv import load_dotenv
-from sqlalchemy.orm import DeclarativeBase
 import os
 from sqlalchemy import create_engine
 
@@ -14,6 +13,3 @@ DATABASE_URL = (
     f"{os.getenv('POSTGRES_DB')}"
 )
 engine = create_engine(DATABASE_URL)
-
-class Base(DeclarativeBase):
-    pass
