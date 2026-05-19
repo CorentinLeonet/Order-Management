@@ -58,14 +58,14 @@ def update(order_id: int):
         return render_template('pages/errors/404.html'), 404
     status = request.form["status"]
     date_shipped = request.form.get("date_shipped") or None
-    date_recieved = request.form.get("date_recieved") or None
+    date_confirmed = request.form.get("date_confirmed") or None
     if date_shipped:
         date_shipped = datetime.fromisoformat(date_shipped)
-    if date_recieved:
-        date_recieved = datetime.fromisoformat(date_recieved)
+    if date_confirmed:
+        date_confirmed = datetime.fromisoformat(date_confirmed)
     orders_repository.update_order(g.session, order,
         order.client_id, order.date_ordered,
-        status, date_shipped, date_recieved
+        status, date_shipped, date_confirmed
     )
     return redirect(url_for('orders.edit', order_id=order_id))
 

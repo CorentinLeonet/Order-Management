@@ -81,7 +81,7 @@ def get_orders_grouped_by_status(session: Session):
     except Exception as e:
         print(e)
 
-def update_order(session: Session, order: Order, client_id : int, date_ordered : datetime, status: str, date_shipped: datetime, date_recieved : datetime) :
+def update_order(session: Session, order: Order, client_id : int, date_ordered : datetime, status: str, date_shipped: datetime, date_confirmed : datetime) :
     try:
         if status == Order_Status_Enum.CANCELLED.value and order.status != Order_Status_Enum.CANCELLED.value: #check if status is cancelled and readd the stokc of article automaticaly but only if the previous status was cancelled already
             for line in order.order_lines: 
@@ -89,7 +89,7 @@ def update_order(session: Session, order: Order, client_id : int, date_ordered :
         order.client_id = client_id
         order.date_ordered = date_ordered
         order.date_shipped = date_shipped
-        order.date_recieved = date_recieved
+        order.date_confirmed = date_confirmed
         order.status = status
         session.commit()
     except Exception as e:
