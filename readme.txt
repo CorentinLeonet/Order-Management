@@ -8,6 +8,11 @@ To run locally:
 - download files
 - rename .env.exemple into .env
 - change values inside .env to match your posgresql server and database name
-- in cmd "py -m pip install -r requirement.txt"
+
+    get the required libraries:
+    - in cmd "py -m venv venv"
+    - in cmd "venv\scripts\activate"
+    - in cmd "py -m pip install -r requirement.txt"
+
 - in cmd "py -m flask --app main run"
 
