@@ -26,12 +26,12 @@ class Order(Base):
         DateTime
     )
 
-    date_shipped : Mapped[datetime] = mapped_column(
+    date_confirmed : Mapped[datetime] = mapped_column(
         DateTime,
         nullable=True
     )
 
-    date_recieved : Mapped[datetime] = mapped_column(
+    date_shipped : Mapped[datetime] = mapped_column(
         DateTime,
         nullable=True
     )
