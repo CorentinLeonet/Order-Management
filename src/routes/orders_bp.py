@@ -1,10 +1,11 @@
-from flask import Blueprint, render_template, g, redirect, url_for, request
+from flask import Blueprint, render_template, g, redirect, url_for, request, send_file
+import io
 import src.repositories.orders_repository as orders_repository
 import src.repositories.clients_repository as clients_repository
 import src.repositories.articles_repository as articles_repository
 from src.Models.Order import Order_Status_Enum
 from datetime import datetime
-from fpdf import fpdf
+from fpdf import FPDF
 
 orders_bp = Blueprint('orders', __name__)
 
@@ -104,3 +105,48 @@ def delete_line(order_id: int, order_line_id: int):
 @orders_bp.route("/orders/<int:order_id>/bill")
 def bill(order_id: int):
     order = orders_repository.get_order_by_id(g.session, order_id)
+    if order is None:
+        return render_template('pages/errors/404.html'), 404
+
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Helvetica", "B", 16)
+    pdf.cell(0, 10, f"Bill - Order #{order.id}", ln=True)
+
+    pdf.set_font("Helvetica", "", 11)
+    pdf.cell(0, 8, f"Client: {order.client.firstname} {order.client.surname}", ln=True)
+    pdf.cell(0, 8, f"Date: {order.date_ordered.strftime('%d/%m/%Y')}", ln=True)
+    pdf.cell(0, 8, f"Status: {order.status}", ln=True)
+    pdf.ln(5)
+
+    # table header
+    pdf.set_font("Helvetica", "B", 11)
+    pdf.cell(80, 8, "Article", border=1)
+    pdf.cell(30, 8, "Unit price", border=1)
+    pdf.cell(30, 8, "Quantity", border=1)
+    pdf.cell(40, 8, "Total", border=1, ln=True)
+
+    # table rows
+    pdf.set_font("Helvetica", "", 11)
+    total = 0
+    for line in order.order_lines:
+        line_total = line.unit_price * line.quantity
+        total += line_total
+        pdf.cell(80, 8, line.article.name, border=1)
+        pdf.cell(30, 8, str(line.unit_price), border=1)
+        pdf.cell(30, 8, str(line.quantity), border=1)
+        pdf.cell(40, 8, str(line_total), border=1, ln=True)
+
+    # total
+    pdf.set_font("Helvetica", "B", 11)
+    pdf.cell(140, 8, "Total", border=1)
+    pdf.cell(40, 8, str(total), border=1, ln=True)
+
+    # send as file download
+    pdf_bytes = pdf.output()
+    return send_file(
+        io.BytesIO(pdf_bytes),
+        mimetype='application/pdf',
+        as_attachment=True,
+        download_name=f"bill_order_{order.id}.pdf"
+    )
