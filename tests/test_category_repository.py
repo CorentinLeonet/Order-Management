@@ -13,9 +13,30 @@ sessionlocal = sessionmaker(bind=engine)
 
 session = sessionlocal()
 
+category_name = "category_test"
+category_description = "Test description"
+
+category_new_name = "category_test_new"
+category_new_description = "Test new description"
+
 def test_create_category():
-    category_name = "category_test"
-    category_description = "Test description"
     category = categories_repository.create_category(session, category_name, category_description )
     assert category.name == category_name
     assert category.description == category_description
+
+def test_read_category():
+    category = categories_repository.get_category_by_name(session, category_name)
+    assert category.name == category_name
+    assert category.description == category_description
+
+def test_update_category():
+    category = categories_repository.get_category_by_name(session, category_name)
+    assert categories_repository.update_category(session, category, category_new_name, category_new_description) == True
+    assert category.name == category_new_name
+    assert category.description == category_new_description
+
+def test_delete_category():
+    category = categories_repository.get_category_by_name(session, category_name)
+    categories_repository.delete_category(session, category)
+    category = categories_repository.get_category_by_name(session, category_name)
+    assert category is None
