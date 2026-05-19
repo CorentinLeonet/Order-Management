@@ -4,6 +4,7 @@ import src.repositories.clients_repository as clients_repository
 import src.repositories.articles_repository as articles_repository
 from src.Models.Order import Order_Status_Enum
 from datetime import datetime
+from fpdf import fpdf
 
 orders_bp = Blueprint('orders', __name__)
 
@@ -37,6 +38,7 @@ def delete(order_id: int):
     if not orders_repository.delete_order_by_id(g.session, order_id):
         return render_template('pages/errors/404.html'), 404
     return redirect(url_for('orders.index'))
+
 
 @orders_bp.route("/orders/<int:order_id>/edit")
 def edit(order_id: int):
@@ -98,3 +100,7 @@ def delete_line(order_id: int, order_line_id: int):
         return render_template('pages/errors/404.html'), 404
     orders_repository.remove_line(g.session, line)
     return redirect(url_for('orders.edit', order_id=order_id))
+
+@orders_bp.route("/orders/<int:order_id>/bill")
+def bill(order_id: int):
+    order = orders_repository.get_order_by_id(g.session, order_id)

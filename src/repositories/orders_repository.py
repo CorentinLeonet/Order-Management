@@ -40,7 +40,7 @@ def get_count_orders(session: Session) -> int:
 
 def get_total_price(session: Session, order: Order):
     try:
-        stmt = select(func.sum(Order_Line.unit_price)).where(Order_Line.order_id == order.id)
+        stmt = select(func.sum(Order_Line.unit_price * Order_Line.quantity)).where(Order_Line.order_id == order.id)
         return session.execute(stmt).scalar_one_or_none()
     except Exception as e:
         print(e)
@@ -140,6 +140,8 @@ def delete_order_by_id(session: Session, id: int) -> bool:
 
         if order is None:
             return False
+        for line in order.order_lines: #refill the article stock
+            line.article.stock_quantity += line.quantity
         session.delete(order)
         session.commit()
         return True

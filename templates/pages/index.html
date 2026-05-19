@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block headscripts %}
+<!--Load the AJAX API for google charts-->
+<script src="https://www.gstatic.com/charts/loader.js"></script>
 {% from 'partials/charts/pie_chart.html' import create_pie_chart %}
 
 {{ create_pie_chart("pie_chart_orders", "Order satus", order_pie_chart_rows)}}

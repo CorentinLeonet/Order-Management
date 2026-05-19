@@ -30,5 +30,10 @@
         <button type="submit" class="btn btn-outline-danger"
             onclick="return confirm('Delete order {{ order.id }}?')">Delete</button>
     </form>
+    {% if order.status == "shipped" %}
+        <form action="{{ url_for('orders.bill', order_id=order.id) }}" method="POST">
+            <button type="submit" class="btn btn-outline-danger">bill</button>
+        </form>
+    {% endif %}
 </div>
 {% endblock %}
