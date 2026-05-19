@@ -4,3 +4,5 @@ __pycache__/
 *.pyc
 features.txt
 .vscode
+.env.test
+.pytest_cache
