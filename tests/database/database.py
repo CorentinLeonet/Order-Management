@@ -3,7 +3,7 @@ from sqlalchemy.orm import DeclarativeBase
 import os
 from sqlalchemy import create_engine
 
-load_dotenv("../.env.test")
+load_dotenv(dotenv_path="tests/.env.test")
 
 DATABASE_URL = (
     f"postgresql+psycopg://"
@@ -13,7 +13,7 @@ DATABASE_URL = (
     f"{os.getenv('POSTGRES_PORT')}/"
     f"{os.getenv('POSTGRES_DB')}"
 )
-
+print(DATABASE_URL)
 engine = create_engine(DATABASE_URL)
 
 class Base(DeclarativeBase):
