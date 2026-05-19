@@ -31,10 +31,53 @@ def get_all_orders(session: Session) -> list[Order]:
     except Exception as e:
         print(e)
 
+def get_count_orders(session: Session) -> int:
+    try:
+        stmt = select(func.count(Order.id))
+        return session.execute(stmt).scalar_one_or_none()
+    except Exception as e:
+        print(e)
+
 def get_total_price(session: Session, order: Order):
     try:
         stmt = select(func.sum(Order_Line.unit_price)).where(Order_Line.order_id == order.id)
         return session.execute(stmt).scalar_one_or_none()
+    except Exception as e:
+        print(e)
+
+
+def get_shipped_orders(session: Session):
+    try:
+        stmt = select(Order).where(Order.status == Order_Status_Enum.SHIPPED.value)
+        return session.execute(stmt).scalars().all()
+    except Exception as e:
+        print(e)
+
+def get_cancelled_orders(session: Session):
+    try:
+        stmt = select(Order).where(Order.status == Order_Status_Enum.CANCELLED.value)
+        return session.execute(stmt).scalars().all()
+    except Exception as e:
+        print(e)
+
+def get_pending_orders(session: Session):
+    try:
+        stmt = select(Order).where(Order.status == Order_Status_Enum.PENDING.value)
+        return session.execute(stmt).scalars().all()
+    except Exception as e:
+        print(e)
+
+def get_confirmed_orders(session: Session):
+    try:
+        stmt = select(Order).where(Order.status == Order_Status_Enum.CONFIRMED.value)
+        return session.execute(stmt).scalars().all()
+    except Exception as e:
+        print(e)
+
+def get_orders_grouped_by_status(session: Session):
+    try:
+        stmt = select(Order.status, func.count(Order.id)).group_by(Order.status)
+        return session.execute(stmt).fetchall()
     except Exception as e:
         print(e)
 

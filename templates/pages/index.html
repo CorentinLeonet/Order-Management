@@ -1,9 +1,17 @@
 {% extends "base.html" %}
+{% block headscripts %}
+{% from 'partials/charts/pie_chart.html' import create_pie_chart %}
+
+{{ create_pie_chart("pie_chart_orders", "Order stats", order_pie_chart_rows)}}
+
+{% endblock %}
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
 <h1 class="mb-1">Order Management</h1>
 <p class="text-bold mb-4">Dashboard</p>
+
+
 
 <div class="row g-3 mb-4">
     <div class="col-3">
@@ -54,5 +62,10 @@
             <div class="p-3 border rounded">New category</div>
         </a>
     </div>
+</div>
+
+
+<div>
+    <div id="pie_chart_orders"></div>
 </div>
 {% endblock %}

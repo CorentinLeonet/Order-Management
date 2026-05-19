@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import select
+from sqlalchemy import select, func
 from src.Models.Category import Category
 
 
@@ -31,6 +31,13 @@ def get_all_categories(session: Session) -> list[Category]:
     try:
         stmt = select(Category)
         return session.execute(stmt).scalars().all()
+    except Exception as e:
+        print(e)
+
+def get_count_categories(session: Session) -> int:
+    try: 
+        stmt = select(func.count(Category.id))
+        return session.execute(stmt).scalar_one_or_none()
     except Exception as e:
         print(e)
 

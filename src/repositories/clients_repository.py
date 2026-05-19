@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import select
+from sqlalchemy import select, func
 from src.Models.Client import Client
 from datetime import datetime
 
@@ -25,6 +25,13 @@ def get_all_clients(session: Session) -> list[Client]:
     try:
         stmt = select(Client)
         return session.execute(stmt).scalars().all()
+    except Exception as e:
+        print(e)
+
+def get_count_clients(session: Session) -> int:
+    try: 
+        stmt = select(func.count(Client.id))
+        return session.execute(stmt).scalar_one_or_none()
     except Exception as e:
         print(e)
 

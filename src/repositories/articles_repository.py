@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import select
+from sqlalchemy import select, func
 from src.Models.Article import Article
 
 
@@ -24,6 +24,13 @@ def get_all_articles(session: Session) -> list[Article]:
     try:
         stmt = select(Article)
         return session.execute(stmt).scalars().all()
+    except Exception as e:
+        print(e)
+
+def get_count_articles(session: Session) -> int:
+    try: 
+        stmt = select(func.count(Article.id))
+        return session.execute(stmt).scalar_one_or_none()
     except Exception as e:
         print(e)
 
