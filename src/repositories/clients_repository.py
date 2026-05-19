@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, func
 from src.Models.Client import Client
+from src.Models.Order import Order
 from datetime import datetime
 
 
@@ -32,6 +33,13 @@ def get_count_clients(session: Session) -> int:
     try: 
         stmt = select(func.count(Client.id))
         return session.execute(stmt).scalar_one_or_none()
+    except Exception as e:
+        print(e)
+
+def get_clients_count_orders(session: Session):
+    try: 
+        stmt = select(func.concat(Client.firstname, Client.surname), func.count(Order.id)).where(Order.client_id == Client.id).group_by(func.concat(Client.firstname, Client.surname), Client.id)
+        return session.execute(stmt).fetchall()
     except Exception as e:
         print(e)
 

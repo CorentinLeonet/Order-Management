@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, func
 from src.Models.Article import Article
+from src.Models.Order_Line import Order_Line
 
 
 def create_article(session: Session, name: str, price: int, stock_quantity: int, categories: list) -> Article:
@@ -31,6 +32,13 @@ def get_count_articles(session: Session) -> int:
     try: 
         stmt = select(func.count(Article.id))
         return session.execute(stmt).scalar_one_or_none()
+    except Exception as e:
+        print(e)
+
+def get_articles_count_sales(session: Session):
+    try: 
+        stmt = select(Article.name, func.sum(Order_Line.quantity)).group_by(Article.name)
+        return session.execute(stmt).fetchall()
     except Exception as e:
         print(e)
 
