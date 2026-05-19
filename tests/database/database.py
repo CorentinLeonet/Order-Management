@@ -13,7 +13,6 @@ DATABASE_URL = (
     f"{os.getenv('POSTGRES_PORT')}/"
     f"{os.getenv('POSTGRES_DB')}"
 )
-print(DATABASE_URL)
 engine = create_engine(DATABASE_URL)
 
 class Base(DeclarativeBase):
