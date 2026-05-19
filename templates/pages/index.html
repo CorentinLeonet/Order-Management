@@ -2,7 +2,10 @@
 {% block headscripts %}
 {% from 'partials/charts/pie_chart.html' import create_pie_chart %}
 
-{{ create_pie_chart("pie_chart_orders", "Order stats", order_pie_chart_rows)}}
+{{ create_pie_chart("pie_chart_orders", "Order satus", order_pie_chart_rows)}}
+{{ create_pie_chart("pie_chart_articles", "Qty sold by Article", article_pie_chart_rows)}}
+{{ create_pie_chart("pie_chart_clients", "Nbr of Order by Client", client_pie_chart_rows)}}
+{{ create_pie_chart("pie_chart_categories", "Nbr of Article by Category", category_pie_chart_rows)}}
 
 {% endblock %}
 {% block title %}Dashboard{% endblock %}
@@ -65,7 +68,18 @@
 </div>
 
 
-<div>
-    <div id="pie_chart_orders"></div>
+<div class="row g-3">
+    <div class="col-3">
+        <div id="pie_chart_orders"></div>
+    </div>
+    <div class="col-3">
+        <div id="pie_chart_articles"></div>
+    </div>
+    <div class="col-3">
+        <div id="pie_chart_clients"></div>
+    </div>
+    <div class="col-3">
+        <div id="pie_chart_categories"></div>
+    </div>
 </div>
 {% endblock %}

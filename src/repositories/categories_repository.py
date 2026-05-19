@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, func
 from src.Models.Category import Category
+from src.Models.Article_Category import Article_Category
 
 
 def create_category(session: Session, name: str, description: str) -> Category:
@@ -38,6 +39,13 @@ def get_count_categories(session: Session) -> int:
     try: 
         stmt = select(func.count(Category.id))
         return session.execute(stmt).scalar_one_or_none()
+    except Exception as e:
+        print(e)
+
+def get_categories_count_articles(session: Session):
+    try: 
+        stmt = select(Category.name, func.count(Article_Category.article_id)).where(Article_Category.category_id == Category.id).group_by(Category.name)
+        return session.execute(stmt).fetchall()
     except Exception as e:
         print(e)
 
