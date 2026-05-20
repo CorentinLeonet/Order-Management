@@ -13,12 +13,16 @@
         <p>{{ order.client.firstname }} {{ order.client.surname }}</p>
         <p class="text-muted mb-1">Date ordered</p>
         <p>{{ order.date_ordered }}</p>
-        <p class="text-muted mb-1">Date shipped</p>
-        <p>{{ order.date_shipped }}</p>
-        <p class="text-muted mb-1">Date recieved</p>
-        <p>{{ order.date_recieved }}</p>
+        {% if order.date_confirmed %}
+            <p class="text-muted mb-1">Date confirmed</p>
+            <p>{{ order.date_confirmed }}</p>
+        {% endif %}
+        {% if order.date_shipped %}
+            <p class="text-muted mb-1">Date shipped</p>
+            <p>{{ order.date_shipped }}</p>
+        {% endif %}
         <p class="text-muted mb-1">Total Price</p>
-        <p>{{ total_price }}</p>
+        <p>{{ total_price }} &euro;</p>
         <p class="text-muted mb-1">Status</p>
         <p>{{ order.status }}</p>
     </div>
