@@ -8,6 +8,7 @@ from src.routes.main_bp import main_bp
 from src.routes.articles_bp import articles_bp
 from src.routes.orders_bp import orders_bp
 from src.routes.clients_bp import clients_bp
+from src.routes.stats_bp import stats_bp
 
 if not database_exists(engine.url): create_database(engine.url)
 # Base.metadata.drop_all(engine)
@@ -30,21 +31,22 @@ def close_session(exc):
 
 @app.errorhandler(500)
 def server_error(e):
-    return render_template('pages/errors/500.html'), 500
+    return render_template('pages/errors/500.html', error=e), 500
 
 @app.errorhandler(404)
 def not_found(e):
-    return render_template('pages/errors/404.html'), 404
+    return render_template('pages/errors/404.html', error=e), 404
 
 @app.errorhandler(400)
 def bad_request(e):
-    return render_template('pages/errors/400.html'), 400
+    return render_template('pages/errors/400.html', error=e), 400
     
 app.register_blueprint(categories_bp)
 app.register_blueprint(main_bp)
 app.register_blueprint(articles_bp)
 app.register_blueprint(orders_bp)
 app.register_blueprint(clients_bp)
+app.register_blueprint(stats_bp)
 
     
     

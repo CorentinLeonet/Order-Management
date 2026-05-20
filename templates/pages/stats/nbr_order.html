@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block headscripts %}
+<!--Load the AJAX API for google charts-->
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+{% from 'partials/charts/column_chart.html' import create_column_chart %}
+
+{{ create_column_chart("column_chart_day", "Nbr of Orders per day", "nbr of Orders", stats_day)}}
+{{ create_column_chart("column_chart_month", "Nbr of Orders per month", "nbr of Orders", stats_month)}}
+{{ create_column_chart("column_chart_year", "Nbr of Orders per year", "nbr of Orders", stats_month)}}
+{% endblock %}
+
+{% block title %}Orders Stats{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">Order Stats</h1>
+</div>
+
+<div>
+    <div id="column_chart_day"></div>
+    <div id="column_chart_month"></div>
+    <div id="column_chart_year"></div>
+</div>
+{% endblock %}
