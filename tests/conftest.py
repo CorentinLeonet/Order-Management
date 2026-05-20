@@ -37,6 +37,8 @@ CLIENT_SURNAME = "client_surname"
 CLIENT_EMAIL = "client_email"
 CLIENT_DATE = datetime.strptime("20/05/2026", "%d/%m/%Y")
 
+ORDER_DATE = datetime.strptime("20/05/2026", "%d/%m/%Y")
+
 @pytest.fixture
 def category(session):
     return categories_repository.create_category(session, CATEGORY_NAME, CATEGORY_DESCRIPTION)
@@ -51,5 +53,5 @@ def client(session):
 
 @pytest.fixture
 def order(session, client):
-    return orders_repository.create_order(session, client.id, datetime.now())
+    return orders_repository.create_order(session, client.id, ORDER_DATE)
 

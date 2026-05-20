@@ -92,6 +92,7 @@ def update_order(session: Session, order: Order, client_id : int, date_ordered :
         order.date_confirmed = date_confirmed
         order.status = status
         session.commit()
+        return True
     except Exception as e:
         print(e)
         return False

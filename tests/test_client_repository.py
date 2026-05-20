@@ -18,10 +18,10 @@ def test_create_client(session, client):
 
 def test_read_client(session, client):
     fetched_client = clients_repository.get_client_by_id(session, client.id)
-    assert client.firstname == CLIENT_FIRSTNAME
-    assert client.surname == CLIENT_SURNAME
-    assert client.email == CLIENT_EMAIL
-    assert client.date_of_creation == CLIENT_DATE
+    assert fetched_client.firstname == CLIENT_FIRSTNAME
+    assert fetched_client.surname == CLIENT_SURNAME
+    assert fetched_client.email == CLIENT_EMAIL
+    assert fetched_client.date_of_creation == CLIENT_DATE
 
 def test_update_client(session, client):
     assert clients_repository.update_client(session, client, client_new_firstname, client_new_surname, client_new_email, client_new_date) == True
