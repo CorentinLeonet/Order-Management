@@ -32,6 +32,11 @@ ARTICLE_STOCK = 100
 CATEGORY_NAME = "cat"
 CATEGORY_DESCRIPTION = "desc"
 
+CLIENT_FIRSTNAME = "client_firstname"
+CLIENT_SURNAME = "client_surname"
+CLIENT_EMAIL = "client_email"
+CLIENT_DATE = datetime.strptime("20/05/2026", "%d/%m/%Y")
+
 @pytest.fixture
 def category(session):
     return categories_repository.create_category(session, CATEGORY_NAME, CATEGORY_DESCRIPTION)
@@ -42,7 +47,7 @@ def article(session, category):
 
 @pytest.fixture
 def client(session):
-    return clients_repository.create_client(session, "Bob", "LeBricoleur", "bob@exemple.com", datetime.now())
+    return clients_repository.create_client(session, CLIENT_FIRSTNAME, CLIENT_SURNAME, CLIENT_EMAIL, CLIENT_DATE)
 
 @pytest.fixture
 def order(session, client):
