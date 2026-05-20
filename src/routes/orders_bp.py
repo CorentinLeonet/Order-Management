@@ -47,7 +47,15 @@ def edit(order_id: int):
     if order is None:
         return render_template('pages/errors/404.html'), 404
     articles = articles_repository.get_all_articles(g.session)
-    all_status = [s.value for s in Order_Status_Enum]
+    match order.status:
+        case Order_Status_Enum.PENDING.value:
+            all_status = [Order_Status_Enum.PENDING.value, Order_Status_Enum.CONFIRMED.value, Order_Status_Enum.CANCELLED.value]
+        case Order_Status_Enum.CONFIRMED.value:
+            all_status = [Order_Status_Enum.CONFIRMED.value, Order_Status_Enum.SHIPPED.value, Order_Status_Enum.CANCELLED.value]
+        case Order_Status_Enum.SHIPPED.value:
+            all_status = [Order_Status_Enum.SHIPPED.value, Order_Status_Enum.CANCELLED.value]
+        case Order_Status_Enum.CANCELLED.value:
+            all_status = [Order_Status_Enum.CANCELLED.value]
     return render_template('pages/orders/edit.html',
         order=order,
         articles=articles,
@@ -60,12 +68,22 @@ def update(order_id: int):
     if order is None:
         return render_template('pages/errors/404.html'), 404
     status = request.form["status"]
-    date_shipped = request.form.get("date_shipped") or None
-    date_confirmed = request.form.get("date_confirmed") or None
-    if date_shipped:
-        date_shipped = datetime.fromisoformat(date_shipped)
-    if date_confirmed:
-        date_confirmed = datetime.fromisoformat(date_confirmed)
+    date_confirmed = order.date_confirmed
+    date_shipped = order.date_shipped
+    if order.date_shipped is None:
+        date_shipped = request.form.get("date_shipped") or None
+        if date_shipped:
+            date_shipped = datetime.fromisoformat(date_shipped)
+    if order.date_confirmed is None:
+        date_confirmed = request.form.get("date_confirmed") or None
+        if date_confirmed:
+            date_confirmed = datetime.fromisoformat(date_confirmed)
+    if status != order.status:
+        if status == Order_Status_Enum.CONFIRMED.value:
+            date_confirmed = datetime.now()
+        elif status == Order_Status_Enum.SHIPPED.value:
+            date_shipped = datetime.now()
+   
     orders_repository.update_order(g.session, order,
         order.client_id, order.date_ordered,
         status, date_shipped, date_confirmed

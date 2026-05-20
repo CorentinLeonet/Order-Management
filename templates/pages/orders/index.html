@@ -23,7 +23,7 @@
         <tr>
             <td>{{ order.id }}</td>
             <td>{{ order.client.firstname }} {{ order.client.surname }}</td>
-            <td>{{ order.date_ordered }}</td>
+            <td>{{ order.date_ordered.strftime('%Y-%m-%d -- %H:%M') }}</td>
             <td>{{ order.status }}</td>
             <td class="text-end">
                 <a href="{{ url_for('orders.show', order_id=order.id) }}" class="btn btn-sm btn-outline-secondary">View</a>
