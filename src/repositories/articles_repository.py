@@ -48,6 +48,8 @@ def delete_article(session: Session, article: Article) -> None:
         session.commit()
     except Exception as e:
         print(e)
+        return False
+    return True
 
 def update_article(session: Session, article: Article, name: str, price: int, stock_quantity: int, categories: list):
     try:
@@ -70,6 +72,7 @@ def delete_article_by_id(session: Session, id: int) -> bool:
             return False
         session.delete(article)
         session.commit()
-        return True
     except Exception as e:
         print(e)
+        return False
+    return True

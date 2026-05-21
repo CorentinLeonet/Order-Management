@@ -91,10 +91,10 @@ def update_order(session: Session, order: Order, client_id : int, date_ordered :
         order.date_confirmed = date_confirmed
         order.status = status
         session.commit()
-        return True
     except Exception as e:
         print(e)
         return False
+    return True
 
 def update_order_add_line(session: Session, order: Order, article: Article, quantity: int):
     try:
@@ -111,10 +111,10 @@ def update_order_add_line(session: Session, order: Order, article: Article, quan
             article.stock_quantity -= quantity
             session.add(order_line)
         session.commit()
-        return True
     except Exception as e:
         print(e)
         return False
+    return True
 
 def update_order_update_order_line_quantity(session: Session, order_line: Order_Line, quantity: int):
     try:
@@ -122,19 +122,19 @@ def update_order_update_order_line_quantity(session: Session, order_line: Order_
         order_line.article.stock_quantity += difference
         order_line.quantity = quantity
         session.commit()
-        return True
     except Exception as e:
         print(e)
         return False
+    return True
 
 def delete_order(session: Session, order: Order):
     try:
         session.delete(order)
         session.commit()
-        return True
     except Exception as e:
         print(e)
         return False
+    return True
 
 def delete_order_by_id(session: Session, id: int) -> bool:
     try:
@@ -148,10 +148,10 @@ def delete_order_by_id(session: Session, id: int) -> bool:
             session.delete(order_Line)
         session.delete(order)
         session.commit()
-        return True
     except Exception as e:
         print(e)
         return False
+    return True
 
 def get_line_by_id(session: Session, id: int) -> Order_Line:
     stmt = select(Order_Line).where(Order_Line.id == id)
@@ -162,10 +162,10 @@ def remove_line(session: Session, order_line: Order_Line) -> bool:
         order_line.article.stock_quantity += order_line.quantity
         session.delete(order_line)
         session.commit()
-        return True
     except Exception as e:
         print(e)
         return False
+    return True
 
 def get_orders_by_day(session: Session):
     day = func.DATE_TRUNC("day", Order.date_ordered)
