@@ -12,6 +12,14 @@
     {% include 'partials/navbar.html' %}
 
     <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                {% for message_type, message in messages %}
+                    {% from "partials/message.html" import display_message %}
+                    {{ display_message(message, message_type) }}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
         {% block content %}{% endblock %}
     </div>
 

@@ -88,7 +88,7 @@ def update(order_id: int):
         order.client_id, order.date_ordered,
         status, date_shipped, date_confirmed
     )
-    return redirect(url_for('orders.edit', order_id=order_id))
+    return redirect(url_for('orders.show', order_id=order_id))
 
 @orders_bp.route("/orders/<int:order_id>/order_lines/add", methods=["POST"])
 def add_line(order_id: int):

@@ -22,7 +22,7 @@
         {% for article in articles %}
         <tr>
             <td>{{ article.name }}</td>
-            <td class="text-muted">{{ article.price }}</td>
+            <td class="text-muted">{{ article.price/100 }}</td>
             <td class="text-muted">{{ article.stock_quantity }}</td>
             <td class="text-muted">
                 {%for category in article.categories%}

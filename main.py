@@ -9,12 +9,14 @@ from src.routes.articles_bp import articles_bp
 from src.routes.orders_bp import orders_bp
 from src.routes.clients_bp import clients_bp
 from src.routes.stats_bp import stats_bp
+import os
 
 if not database_exists(engine.url): create_database(engine.url)
 # Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
 
 app = Flask(__name__)
+app.secret_key = os.urandom(12).hex()
 sessionlocal = sessionmaker(bind=engine)
 
 @app.before_request #Open session

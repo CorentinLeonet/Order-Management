@@ -1,0 +1,65 @@
+{% macro display_message(message, message_type=None) %}
+
+{% if message_type %}
+    {% if message_type == "error" %}
+        <div
+            class="alert alert-danger alert-dismissible fade show m-3"
+            role="alert"
+        >
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+            ></button>
+            <strong>Error:</strong> {{ message }}
+        </div>
+    {% elif message_type == "success" %}
+        <div
+            class="alert alert-success alert-dismissible fade show m-3"
+            role="alert"
+        >
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+            ></button>
+            <strong>Success:</strong> {{ message }}
+        </div>
+    {% elif message_type == "message" %}
+    <div
+        class="alert alert-secondary alert-dismissible fade show m-3"
+        role="alert"
+    >
+        <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"
+        ></button>
+        <strong>Message:</strong> {{ message }}
+    </div>
+    {% endif %}
+{% else %}
+<div
+    class="alert alert-secondary alert-dismissible fade show m-3"
+    role="alert"
+>
+    <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+    ></button>
+    <strong>Message:</strong> {{ message }}
+</div>
+{% endif %}
+
+<script>
+    var alertList = document.querySelectorAll(".alert");
+    alertList.forEach(function (alert) {
+        new bootstrap.Alert(alert);
+    });
+</script>
+{% endmacro %}
