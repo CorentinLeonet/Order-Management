@@ -11,4 +11,4 @@ def orders():
     stats_day = orders_repository.get_orders_by_day(g.session)
     stats_month = orders_repository.get_orders_by_month(g.session)
     stats_year = orders_repository.get_orders_by_year(g.session)
-    return render_template("pages/stats/nbr_order.html", stats_day=stats_day, stats_month=stats_month, stats_year=stats_year)
+    return render_template("pages/stats/stats_orders.html", stats_day=stats_day, stats_month=stats_month, stats_year=stats_year)
