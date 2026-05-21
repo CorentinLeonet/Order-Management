@@ -49,32 +49,34 @@ def get_categories_count_articles(session: Session):
     except Exception as e:
         print(e)
 
-def delete_category(session: Session, category: Category) -> None:
+def delete_category(session: Session, category: Category) -> bool:
     try:
         session.delete(category)
         session.commit()
     except Exception as e:
         print(e)
+        return False
+    return True
 
 def delete_category_by_id(session: Session, id: int) -> bool:
     try:
         stmt = select(Category).where(Category.id == id)
         category = session.execute(stmt).scalar_one_or_none()
-
         if category is None:
             return False
         session.delete(category)
         session.commit()
-        return True
     except Exception as e:
         print(e)
+        return False
+    return True
 
 def update_category(session: Session, category: Category, name: str, description: str) -> bool:
     try:
         category.name = name
         category.description = description
         session.commit()
-    except Exception  as e:
+    except Exception as e:
         print(e)
         return False
     return True

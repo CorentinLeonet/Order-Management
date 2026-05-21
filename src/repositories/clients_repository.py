@@ -61,6 +61,8 @@ def delete_client(session: Session, client: Client) -> None:
         session.commit()
     except Exception as e:
         print(e)
+        return False
+    return True
 
 def delete_client_by_id(session: Session, id: int) -> bool:
     try:
@@ -71,6 +73,8 @@ def delete_client_by_id(session: Session, id: int) -> bool:
             return False
         session.delete(client)
         session.commit()
-        return True
     except Exception as e:
         print(e)
+        return False
+    return True
+    
