@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import select, func, DATE
+from sqlalchemy import select, func
 from src.Models.Order import Order, Order_Status_Enum
 from datetime import datetime
 from src.Models.Article import Article
