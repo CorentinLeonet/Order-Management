@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, g, redirect, url_for, request
+from flask import Blueprint, render_template, g, redirect, url_for, request, flash
 import src.repositories.categories_repository as categories_repository
 
 categories_bp = Blueprint('categories', __name__)
@@ -17,10 +17,18 @@ def show(category_id: int):
 
 @categories_bp.route("/categories/new", methods=["GET", "POST"])
 def create():
+    error = None
+    success = None
     if request.method == "POST":
         name = request.form["name"]
         description = request.form["description"]
-        categories_repository.create_category(g.session, name, description)
+        category = categories_repository.create_category(g.session, name, description)
+        if category:
+            success = f"category {name} was successfully created"
+        else:
+            error = f"could not create category {name}"
+        if error: flash(error, "error")
+        if success: flash(success, "success")
         return redirect(url_for('categories.index'))
     return render_template('pages/categories/new.html')
 
@@ -33,16 +41,29 @@ def edit(category_id: int):
 
 @categories_bp.route("/categories/<int:category_id>/update", methods=["POST"])
 def update(category_id: int):
+    error = None
+    success = None
     category = categories_repository.get_category_by_id(g.session, category_id)
     if category is None:
         return render_template('pages/errors/404.html'), 404
     name = request.form["name"]
     description = request.form["description"]
-    categories_repository.update_category(g.session, category, name, description)
-    return redirect(url_for('categories.index'))
+    if categories_repository.update_category(g.session, category, name, description):
+        success = f"category {name} was successfully updated"
+    else:
+        error = f"could not update category {name}"
+    if error: flash(error, "error")
+    if success: flash(success, "success")
+    return redirect(url_for('categories.show', category_id=category_id))
 
 @categories_bp.route("/categories/<int:category_id>/delete", methods=["POST"])
 def delete(category_id: int):
-    if not categories_repository.delete_category_by_id(g.session, category_id):
-        return render_template('pages/errors/404.html'), 404
+    error = None
+    success = None
+    if categories_repository.delete_category_by_id(g.session, category_id):
+        success = f"category was successfully deleted"
+    else:
+        error = f"could not delete category"
+    if error: flash(error, "error")
+    if success: flash(success, "success")
     return redirect(url_for('categories.index'))

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, g, redirect, url_for, request, send_file
+from flask import Blueprint, render_template, g, redirect, url_for, request, send_file, flash
 import io
 import src.repositories.orders_repository as orders_repository
 import src.repositories.clients_repository as clients_repository
@@ -26,18 +26,32 @@ def show(order_id: int):
 
 @orders_bp.route("/orders/new", methods=["GET", "POST"])
 def create():
+    success = None
+    error = None
     if request.method == "POST":
         client_id = request.form["client_id"]
         date_ordered = datetime.now()
-        orders_repository.create_order(g.session, client_id, date_ordered)
+        order = orders_repository.create_order(g.session, client_id, date_ordered)
+        if order:
+            success = f"Order was successfully created"
+        else:
+            error = f"Order could not be created"
+        if error: flash(error, "error")
+        if success: flash(success, "success")
         return redirect(url_for('orders.index'))
     clients = clients_repository.get_all_clients(g.session)
     return render_template('pages/orders/new.html', clients=clients)
 
 @orders_bp.route("/orders/<int:order_id>/delete", methods=["POST"])
 def delete(order_id: int):
-    if not orders_repository.delete_order_by_id(g.session, order_id):
-        return render_template('pages/errors/404.html'), 404
+    success = None
+    error = None
+    if orders_repository.delete_order_by_id(g.session, order_id):
+        success = f"Order was successfully deleted"
+    else:
+        error = f"Order could not be deleted"
+    if error: flash(error, "error")
+    if success: flash(success, "success")
     return redirect(url_for('orders.index'))
 
 
@@ -64,6 +78,8 @@ def edit(order_id: int):
 
 @orders_bp.route("/orders/<int:order_id>/update", methods=["POST"])
 def update(order_id: int):
+    success = None
+    error = None
     order = orders_repository.get_order_by_id(g.session, order_id)
     if order is None:
         return render_template('pages/errors/404.html'), 404
@@ -84,14 +100,21 @@ def update(order_id: int):
         elif status == Order_Status_Enum.SHIPPED.value:
             date_shipped = datetime.now()
    
-    orders_repository.update_order(g.session, order,
+    if orders_repository.update_order(g.session, order,
         order.client_id, order.date_ordered,
         status, date_shipped, date_confirmed
-    )
+    ):
+        success = f"Order was successfully updated"
+    else:
+        error = f"Order could not be updated"
+    if error: flash(error, "error")
+    if success: flash(success, "success")
     return redirect(url_for('orders.show', order_id=order_id))
 
 @orders_bp.route("/orders/<int:order_id>/order_lines/add", methods=["POST"])
 def add_line(order_id: int):
+    success = None
+    error = None
     order = orders_repository.get_order_by_id(g.session, order_id)
     if order is None:
         return render_template('pages/errors/404.html'), 404
@@ -99,25 +122,46 @@ def add_line(order_id: int):
     quantity = int(request.form["quantity"])
     article = articles_repository.get_article_by_id(g.session, article_id)
     if article is None or article.stock_quantity < quantity:
+        error = f"Cannot add more than what's in stock ({article.stock_quantity})"
+        flash(error, "error")
         return redirect(url_for('orders.edit', order_id=order_id))
-    orders_repository.update_order_add_line(g.session, order, article, quantity)
+    if orders_repository.update_order_add_line(g.session, order, article, quantity):
+        success = f"Order was successfully updated"
+    else:
+        error = f"Order could not be updated"
+    if error: flash(error, "error")
+    if success: flash(success, "success")
     return redirect(url_for('orders.edit', order_id=order_id))
 
 @orders_bp.route("/orders/<int:order_id>/lines/<int:order_line_id>/update", methods=["POST"])
 def update_line(order_id: int, order_line_id: int):
+    success = None
+    error = None
     order_line = orders_repository.get_line_by_id(g.session, order_line_id)
     if order_line is None:
         return render_template('pages/errors/404.html'), 404
     quantity = int(request.form["quantity"])
-    orders_repository.update_order_update_order_line_quantity(g.session, order_line, quantity)
+    if orders_repository.update_order_update_order_line_quantity(g.session, order_line, quantity):
+        success = f"Order was successfully updated"
+    else:
+        error = f"Order could not be updated"
+    if error: flash(error, "error")
+    if success: flash(success, "success")
     return redirect(url_for('orders.edit', order_id=order_id))
 
 @orders_bp.route("/orders/<int:order_id>/order_lines/<int:order_line_id>/delete", methods=["POST"])
 def delete_line(order_id: int, order_line_id: int):
+    success = None
+    error = None
     order_line = orders_repository.get_line_by_id(g.session, order_line_id)
     if order_line is None:
         return render_template('pages/errors/404.html'), 404
-    orders_repository.remove_line(g.session, order_line)
+    if orders_repository.remove_line(g.session, order_line):
+        success = f"Order was successfully updated, article stock has been updated"
+    else:
+        error = f"Order could not be updated"
+    if error: flash(error, "error")
+    if success: flash(success, "success")
     return redirect(url_for('orders.edit', order_id=order_id))
 
 @orders_bp.route("/orders/<int:order_id>/bill")

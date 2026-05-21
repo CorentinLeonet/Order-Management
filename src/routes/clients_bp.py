@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, g, redirect, url_for, request
+from flask import Blueprint, render_template, g, redirect, url_for, request, flash
 import src.repositories.clients_repository as clients_repository
 from datetime import datetime
 
@@ -18,12 +18,20 @@ def show(client_id: int):
 
 @clients_bp.route("/client/new", methods=["GET", "POST"])
 def create():
+    error = None
+    success = None
     if request.method == "POST":
         firstname = request.form["firstname"]
         surname = request.form["surname"]
         email = request.form["email"]
         date_of_creation = datetime.now()
-        clients_repository.create_client(g.session, firstname, surname, email, date_of_creation)
+        client = clients_repository.create_client(g.session, firstname, surname, email, date_of_creation)
+        if client:
+            success = f"client {firstname} {surname} was successfully created"
+        else:
+            error = f"client {firstname} {surname} could not be created"
+        if error: flash(error, "error")
+        if success: flash(success, "success")
         return redirect(url_for('clients.index'))
     return render_template('pages/clients/new.html')
 
@@ -36,6 +44,8 @@ def edit(client_id: int):
 
 @clients_bp.route("/clients/<int:client_id>/update", methods=["POST"])
 def update(client_id: int):
+    error = None
+    success = None
     client = clients_repository.get_client_by_id(g.session, client_id)
     if client is None:
         return render_template('pages/errors/404.html'), 404
@@ -43,11 +53,22 @@ def update(client_id: int):
     surname = request.form["surname"]
     email = request.form["email"]
     date_of_creation = request.form["date_of_creation"]
-    clients_repository.update_client(g.session, client, firstname, surname, email, date_of_creation)
-    return redirect(url_for('clients.index'))
+    if clients_repository.update_client(g.session, client, firstname, surname, email, date_of_creation):
+        success = f"client {firstname} {surname} was successfully updated"
+    else:
+        error = f"client {firstname} {surname} could not be updated"
+    if error: flash(error, "error")
+    if success: flash(success, "success")
+    return redirect(url_for('clients.show', client=client_id))
 
 @clients_bp.route("/clients/<int:client_id>/delete", methods=["POST"])
 def delete(client_id: int):
-    if not clients_repository.delete_client_by_id(g.session, client_id):
-        return render_template('pages/errors/404.html'), 404
+    error = None
+    success = None
+    if clients_repository.delete_client_by_id(g.session, client_id):
+        success = f"client was successfully deleted"
+    else:
+        error = f"client could not be deleted"
+    if error: flash(error, "error")
+    if success: flash(success, "success")
     return redirect(url_for('clients.index'))

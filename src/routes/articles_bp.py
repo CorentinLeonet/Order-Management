@@ -28,7 +28,9 @@ def create():
         categories_id = request.form.getlist("categories_id")
         if categories_id:
             categories = [categories_repository.get_category_by_id(g.session, int(category_id)) for category_id in categories_id]
-            articles_repository.create_article(g.session, name, price, stock_quantity, categories)
+            article = articles_repository.create_article(g.session, name, price, stock_quantity, categories)
+            success = f"article {article.name} was successfully created"
+            flash(success, "success")
             return redirect(url_for('articles.index'))
         else:
             error = "Select at least one category"
@@ -47,8 +49,8 @@ def edit(article_id: int):
 
 @articles_bp.route("/articles/<int:article_id>/update", methods=["POST"], )
 def update(article_id: int):
-    message = None
     error = None
+    success = None
     article = articles_repository.get_article_by_id(g.session, article_id)
     if article is None:
         return render_template('pages/errors/404.html'), 404
@@ -59,17 +61,25 @@ def update(article_id: int):
     categories_id = request.form.getlist("categories_id")
     if categories_id:
         categories = [categories_repository.get_category_by_id(g.session, int(category_id)) for category_id in categories_id]
-        articles_repository.create_article(g.session, name, price, stock_quantity, categories)
-        if not articles_repository.update_article(g.session, article, name, price, stock_quantity, categories):
+        if articles_repository.update_article(g.session, article, name, price, stock_quantity, categories):
+            success = f"article {article.name} was successfully updated"
+        else:
             error = "error in the form"
     else:
         error = "Select at least one category"
     if error: flash(error, "error")
-    if message: flash(message, "message")
-    return redirect(url_for('articles.edit', article_id=article_id))
+    if success: flash(success, "success")
+    return redirect(url_for('articles.show', article_id=article_id))
 
 @articles_bp.route("/articles/<int:article_id>/delete", methods=["POST"])
 def delete(article_id: int):
-    if not articles_repository.delete_article_by_id(g.session, article_id):
-        return render_template('pages/errors/404.html'), 404
+    error = None
+    success = None
+    if articles_repository.delete_article_by_id(g.session, article_id):
+        success = f"article was successfully deleted"
+    else:
+        error = f"article could not be deleted"
+
+    if error: flash(error, "error")
+    if success: flash(success, "success")
     return redirect(url_for('articles.index'))
