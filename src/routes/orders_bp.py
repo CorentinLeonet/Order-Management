@@ -175,37 +175,39 @@ def bill(order_id: int):
 
     pdf = FPDF()
     pdf.add_page()
-    pdf.set_font("Helvetica", "B", 16)
+    pdf.add_font(family="DejaVuSerif", fname="static/font/DejaVuSerifCondensed.ttf")
+    pdf.add_font(family="DejaVuSerif", fname="static/font/DejaVuSerifCondensed-Bold.ttf", style="B")
+    pdf.set_font("DejaVuSerif", "B", 16)
     pdf.cell(0, 10, f"Bill - Order #{order.id}", ln=True)
 
-    pdf.set_font("Helvetica", "", 11)
+    pdf.set_font("DejaVuSerif", "", 11)
     pdf.cell(0, 8, f"Client: {order.client.firstname} {order.client.surname}", ln=True)
     pdf.cell(0, 8, f"Date: {order.date_ordered.strftime('%d/%m/%Y')}", ln=True)
     pdf.cell(0, 8, f"Status: {order.status}", ln=True)
     pdf.ln(5)
 
     # table header
-    pdf.set_font("Helvetica", "B", 11)
+    pdf.set_font("DejaVuSerif", "B", 11)
     pdf.cell(80, 8, "Article", border=1)
     pdf.cell(30, 8, "Unit price", border=1)
     pdf.cell(30, 8, "Quantity", border=1)
     pdf.cell(40, 8, "Total", border=1, ln=True)
 
     # table rows
-    pdf.set_font("Helvetica", "", 11)
+    pdf.set_font("DejaVuSerif", "", 11)
     total = 0
     for line in order.order_lines:
         line_total = line.unit_price * line.quantity
         total += line_total
         pdf.cell(80, 8, line.article.name, border=1)
-        pdf.cell(30, 8, str(line.unit_price/100), border=1)
+        pdf.cell(30, 8, str(line.unit_price/100) + EURO, border=1)
         pdf.cell(30, 8, str(line.quantity), border=1)
-        pdf.cell(40, 8, str(line_total/100), border=1, ln=True)
+        pdf.cell(40, 8, str(line_total/100) + EURO, border=1, ln=True)
 
     # total
-    pdf.set_font("Helvetica", "B", 11)
+    pdf.set_font("DejaVuSerif", "B", 11)
     pdf.cell(140, 8, "Total", border=1)
-    pdf.cell(40, 8, str(total/100), border=1, ln=True)
+    pdf.cell(40, 8, str(total/100) + EURO, border=1, ln=True)
 
     # send as file download
     pdf_bytes = pdf.output()
