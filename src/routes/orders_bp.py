@@ -114,10 +114,10 @@ def update_line(order_id: int, order_line_id: int):
 
 @orders_bp.route("/orders/<int:order_id>/order_lines/<int:order_line_id>/delete", methods=["POST"])
 def delete_line(order_id: int, order_line_id: int):
-    line = orders_repository.get_line_by_id(g.session, order_line_id)
-    if line is None:
+    order_line = orders_repository.get_line_by_id(g.session, order_line_id)
+    if order_line is None:
         return render_template('pages/errors/404.html'), 404
-    orders_repository.remove_line(g.session, line)
+    orders_repository.remove_line(g.session, order_line)
     return redirect(url_for('orders.edit', order_id=order_id))
 
 @orders_bp.route("/orders/<int:order_id>/bill")
