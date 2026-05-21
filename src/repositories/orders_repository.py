@@ -14,7 +14,6 @@ def create_order(session: Session, client_id: int, date_ordered: datetime, statu
         session.refresh(order)
         return order
     except Exception as e:
-        session.rollback()
         print(e)
     
 def get_order_by_id(session: Session, id: int) -> Order:
@@ -113,7 +112,6 @@ def update_order_add_line(session: Session, order: Order, article: Article, quan
             session.add(order_line)
         session.commit()
     except Exception as e:
-        session.rollback()
         print(e)
 
 def update_order_update_order_line_quantity(session: Session, order_line: Order_Line, quantity: int):
@@ -123,7 +121,6 @@ def update_order_update_order_line_quantity(session: Session, order_line: Order_
         order_line.quantity = quantity
         session.commit()
     except Exception as e:
-        session.rollback()
         print(e)
 
 def delete_order(session: Session, order: Order):
@@ -131,7 +128,6 @@ def delete_order(session: Session, order: Order):
         session.delete(order)
         session.commit()
     except Exception as e:
-        session.rollback()
         print(e)
 
 def delete_order_by_id(session: Session, id: int) -> bool:
@@ -148,7 +144,6 @@ def delete_order_by_id(session: Session, id: int) -> bool:
         session.commit()
         return True
     except Exception as e:
-        session.rollback()
         print(e)
 
 def get_line_by_id(session: Session, id: int) -> Order_Line:

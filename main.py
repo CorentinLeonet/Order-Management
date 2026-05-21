@@ -26,7 +26,7 @@ def close_session(exc):
     session = g.pop('session', None)
     if session:
         if exc is not None:
-            session.rollback()
+            session.rollback() #rollback if any exception
         session.close()
 
 @app.errorhandler(500)
