@@ -29,14 +29,14 @@
             {% if order.date_confirmed %}
                 <div class="mb-3">
                     <label class="form-label">Date Confirmed</label>
-                    <input type="datetime-local" name="date_confirmed" class="form-control"
+                    <input type="datetime-local" name="date_confirmed" class="form-control" min="{{ order.date_ordered.strftime('%Y-%m-%dT%H:%M') }}"
                         value="{{ order.date_confirmed.strftime('%Y-%m-%dT%H:%M') }}" {% if order.date_shipped or order.status == "cancelled" %} disabled {% endif %}>
                 </div>
             {% endif %}
             {% if order.date_shipped %}
                 <div class="mb-3">
                     <label class="form-label">Date shipped</label>
-                    <input type="datetime-local" name="date_shipped" class="form-control"
+                    <input type="datetime-local" name="date_shipped" class="form-control" min="{{ order.date_confirmed.strftime('%Y-%m-%dT%H:%M') }}"
                         value="{{ order.date_shipped.strftime('%Y-%m-%dT%H:%M') }}" {% if order.status == "cancelled" %} disabled {% endif %}>
                 </div>
             {% endif %}
