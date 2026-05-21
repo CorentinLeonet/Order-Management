@@ -6,7 +6,21 @@
             <a class="nav-link" href="{{ url_for('articles.index') }}">Articles</a>
             <a class="nav-link" href="{{ url_for('orders.index') }}">Orders</a>
             <a class="nav-link" href="{{ url_for('clients.index') }}">Clients</a>
-            <a class="nav-link" href="{{ url_for('stats.orders') }}">Stats</a>
+            <div class="dropdown open">
+                <a
+                    class="nav-link dropdown-toggle"
+                    type="button"
+                    id="triggerId"
+                    data-bs-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                >
+                    Stats
+                </a>
+                <div class="dropdown-menu bg-dark" aria-labelledby="triggerId">
+                    <a class="dropdown-item nav-link bg-dark" href="{{ url_for('stats.orders') }}">Order Stats</a>
+                </div>
+            </div>
         </div>
     </div>
 </nav>

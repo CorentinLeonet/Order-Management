@@ -168,6 +168,7 @@ def delete_line(order_id: int, order_line_id: int):
 
 @orders_bp.route("/orders/<int:order_id>/bill")
 def bill(order_id: int):
+    EURO = "\u20ac"
     order = orders_repository.get_order_by_id(g.session, order_id)
     if order is None:
         return render_template('pages/errors/404.html'), 404
@@ -197,14 +198,14 @@ def bill(order_id: int):
         line_total = line.unit_price * line.quantity
         total += line_total
         pdf.cell(80, 8, line.article.name, border=1)
-        pdf.cell(30, 8, str(line.unit_price), border=1)
+        pdf.cell(30, 8, str(line.unit_price/100), border=1)
         pdf.cell(30, 8, str(line.quantity), border=1)
-        pdf.cell(40, 8, str(line_total), border=1, ln=True)
+        pdf.cell(40, 8, str(line_total/100), border=1, ln=True)
 
     # total
     pdf.set_font("Helvetica", "B", 11)
     pdf.cell(140, 8, "Total", border=1)
-    pdf.cell(40, 8, str(total), border=1, ln=True)
+    pdf.cell(40, 8, str(total/100), border=1, ln=True)
 
     # send as file download
     pdf_bytes = pdf.output()
