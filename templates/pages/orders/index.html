@@ -30,7 +30,7 @@
             <td>{{ order.date_confirmed.strftime('%Y-%m-%d -- %H:%M') if order.date_confirmed else "not yet confirmed" }}</td>
             <td>{{ order.date_shipped.strftime('%Y-%m-%d -- %H:%M') if order.date_shipped else "not yet shipped" }}</td>
             <td>{{ order.status }}</td>
-            <td>{{ order.total_price/100 }} &euro;</td>
+            <td>{{ order.total_price/100 if order.total_price else 0 }} &euro;</td>
             <td class="text-end">
                 <a href="{{ url_for('orders.show', order_id=order.id) }}" class="btn btn-sm btn-outline-secondary">View</a>
                 <form action="{{ url_for('orders.delete', order_id=order.id) }}" method="POST" class="d-inline">
