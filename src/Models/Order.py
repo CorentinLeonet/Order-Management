@@ -1,7 +1,7 @@
 from typing import Any
 from src.database.database import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import DateTime, ForeignKey, Enum as EnumSQL
+from sqlalchemy import DateTime, ForeignKey, Enum as EnumSQL, CheckConstraint
 from datetime import datetime
 from enum import Enum
 
@@ -42,6 +42,11 @@ class Order(Base):
     #     nullable = False
     #     unique = False
     # )
+
+    __table_args__ = (
+        CheckConstraint("date_confirmed >= date_ordered"),
+        CheckConstraint("date_shipped >= date_confirmed")
+    )
 
     order_lines = relationship('Order_Line')
     client = relationship("Client")
