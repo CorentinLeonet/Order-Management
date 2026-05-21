@@ -59,7 +59,7 @@ def update(client_id: int):
         error = f"client {firstname} {surname} could not be updated"
     if error: flash(error, "error")
     if success: flash(success, "success")
-    return redirect(url_for('clients.show', client=client_id))
+    return redirect(url_for('clients.show', client_id=client_id))
 
 @clients_bp.route("/clients/<int:client_id>/delete", methods=["POST"])
 def delete(client_id: int):
