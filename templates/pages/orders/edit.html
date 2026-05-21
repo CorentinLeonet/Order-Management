@@ -64,7 +64,7 @@
                 {% for order_line in order.order_lines %}
                 <tr>
                     <td>{{ order_line.article.name }}</td>
-                    <td>{{ order_line.unit_price }}</td>
+                    <td>{{ order_line.unit_price/100 }} &euro;</td>
                     <td>
                         <form action="{{ url_for('orders.update_line', order_id=order.id, order_line_id=order_line.id) }}" method="POST" class="d-flex gap-2 align-items-center">
                             <input type="number" name="quantity" value="{{ order_line.quantity }}" min="1" class="form-control form-control-sm" style="width: 80px"{% if order.status != "pending" %} disabled {% endif %}>
@@ -73,7 +73,7 @@
                             {% endif %}
                         </form>
                     </td>
-                    <td>{{ order_line.unit_price * order_line.quantity }}</td>
+                    <td>{{ order_line.unit_price * order_line.quantity/100 }} &euro;</td>
                     {% if order.status == "pending" %}
                         <td class="text-end">
                             <form action="{{ url_for('orders.delete_line', order_id=order.id, order_line_id=order_line.id) }}" method="POST" class="d-inline">

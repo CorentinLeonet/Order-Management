@@ -12,6 +12,8 @@ orders_bp = Blueprint('orders', __name__)
 @orders_bp.route("/orders")
 def index():
     orders = orders_repository.get_all_orders(g.session)
+    for order in orders:
+        order.total_price = orders_repository.get_total_price(g.session, order)
     return render_template('pages/orders/index.html', orders=orders)
 
 @orders_bp.route("/orders/<int:order_id>")

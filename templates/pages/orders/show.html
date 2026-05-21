@@ -22,7 +22,7 @@
             <p>{{ order.date_shipped.strftime('%Y-%m-%d -- %H:%M') }}</p>
         {% endif %}
         <p class="text-muted mb-1">Total Price</p>
-        <p>{{ total_price }} &euro;</p>
+        <p>{{ total_price/100 }} &euro;</p>
         <p class="text-muted mb-1">Status</p>
         <p>{{ order.status }}</p>
     </div>
