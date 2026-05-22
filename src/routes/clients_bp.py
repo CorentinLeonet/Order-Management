@@ -9,6 +9,15 @@ def index():
     clients = clients_repository.get_all_clients(g.session)
     return render_template('pages/clients/index.html', clients=clients)
 
+@clients_bp.route("/clients", methods=["POST"])
+def search():
+    client_name = request.form["client_name"]
+    if client_name:
+        clients = clients_repository.get_all_clients_by_name(g.session, client_name)
+    else: 
+        clients = clients_repository.get_all_clients(g.session)
+    return render_template('pages/clients/index.html', clients=clients)
+
 @clients_bp.route("/clients/<int:client_id>")
 def show(client_id: int):
     client = clients_repository.get_client_by_id(g.session, client_id)

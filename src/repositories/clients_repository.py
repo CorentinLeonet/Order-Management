@@ -43,6 +43,14 @@ def get_clients_count_orders(session: Session):
     except Exception as e:
         print(e)
 
+def get_all_clients_by_name(session: Session, client_name: str):
+    try:
+        stmt = select(Client).where(Client.surname.ilike("%" + client_name + "%"))
+        return session.execute(stmt).scalars().all()
+    except Exception as e:
+        print(e)
+
+
 def update_client(session: Session, client:Client, firstname: str, surname: str, email: str, date_of_creation: datetime):
     try:
         client.firstname = firstname

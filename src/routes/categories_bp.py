@@ -8,6 +8,15 @@ def index():
     categories = categories_repository.get_all_categories(g.session)
     return render_template('pages/categories/index.html', categories=categories)
 
+@categories_bp.route("/categories", methods=["POST"])
+def search():
+    category_name = request.form["category_name"]
+    if category_name:
+        categories = categories_repository.get_all_categories_by_name(g.session, category_name)
+    else: 
+        categories = categories_repository.get_all_categories(g.session)
+    return render_template('pages/categories/index.html', categories=categories)
+
 @categories_bp.route("/categories/<int:category_id>")
 def show(category_id: int):
     category = categories_repository.get_category_by_id(g.session, category_id)

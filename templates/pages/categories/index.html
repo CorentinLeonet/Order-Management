@@ -15,6 +15,19 @@
             <th>Description</th>
             <th></th>
         </tr>
+        <form action="{{ url_for('categories.search') }}" method="post">
+            <div class="mb-3">
+                <input
+                    type="text"
+                    class="form-control"
+                    name="category_name"
+                    id="search_article"
+                    aria-describedby="helpId"
+                    placeholder="search"
+                />
+            </div>
+            <button type="submit">Search</button>
+        </form>
     </thead>
     <tbody>
         {% for category in categories %}

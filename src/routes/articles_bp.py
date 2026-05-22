@@ -4,9 +4,18 @@ import src.repositories.categories_repository as categories_repository
 
 articles_bp = Blueprint('articles', __name__)
 
-@articles_bp.route("/articles")
+@articles_bp.route("/articles", methods=["GET"])
 def index():
     articles = articles_repository.get_all_articles(g.session)
+    return render_template('pages/articles/index.html', articles=articles)
+
+@articles_bp.route("/articles", methods=["POST"])
+def search():
+    article_name = request.form["article_name"]
+    if article_name:
+        articles = articles_repository.get_all_articles_by_name(g.session, article_name)
+    else: 
+        articles = articles_repository.get_all_articles(g.session)
     return render_template('pages/articles/index.html', articles=articles)
 
 @articles_bp.route("/articles/<int:article_id>")

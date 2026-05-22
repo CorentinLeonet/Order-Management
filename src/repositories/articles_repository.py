@@ -42,6 +42,13 @@ def get_articles_count_sales(session: Session):
     except Exception as e:
         print(e)
 
+def get_all_articles_by_name(session: Session, article_name: str):
+    try:
+        stmt = select(Article).where(Article.name.ilike("%" + article_name + "%"))
+        return session.execute(stmt).scalars().all()
+    except Exception as e:
+        print(e)
+
 def delete_article(session: Session, article: Article) -> None:
     try:
         session.delete(article)

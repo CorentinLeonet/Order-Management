@@ -28,6 +28,13 @@ def get_category_by_name(session: Session, name: str) -> Category:
     except Exception as e:
         print(e)
 
+def get_all_categories_by_name(session: Session, category_name: str):
+    try:
+        stmt = select(Category).where(Category.name.ilike("%" + category_name + "%"))
+        return session.execute(stmt).scalars().all()
+    except Exception as e:
+        print(e)
+
 def get_all_categories(session: Session) -> list[Category]:
     try:
         stmt = select(Category)
