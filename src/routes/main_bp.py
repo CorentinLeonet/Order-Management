@@ -29,5 +29,4 @@ def index():
                             article_pie_chart_rows=article_pie_chart_rows,
                             client_pie_chart_rows=client_pie_chart_rows,
                             category_pie_chart_rows=category_pie_chart_rows
-
     )

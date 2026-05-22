@@ -21,10 +21,18 @@
       {% endfor %}
       data.addRows(array)
       // Set chart options
-      var options = {'title':"{{chart_title}}",
-                      'width':500,
-                      'height':300,
-                      'sliceVisibilityThreshold':0
+      var options = {
+                      title:"{{chart_title}}",
+                      width:"relvative",
+                      height: 500,
+                      sliceVisibilityThreshold:0,
+                      bar: {groupWidth: "relative"},
+                      legend: { position: "none" },
+                      animation: {
+                        startup : true,
+                        duration: 1000,
+                        easing : "Out"
+                      } 
                     };
       // Instantiate and draw our chart, passing in some options.
       var chart = new google.visualization.ColumnChart(document.getElementById("{{chart_id}}"));
