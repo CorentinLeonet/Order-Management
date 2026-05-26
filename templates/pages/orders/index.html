@@ -4,18 +4,17 @@
 {% block content %}
 
 <div class="d-flex justify-content-between align-items-end mb-4">
+
     <div>
         <h1 class="mb-0">Orders</h1>
-        <div class="text-muted small">Manage your order(s)</div>
+        <div class="text-muted small">Manage your orders</div>
     </div>
 
-    <div class="d-flex align-items-center gap-3">
+    <a href="{{ url_for('orders.create') }}"
+       class="btn btn-primary btn-sm">
+        New order
+    </a>
 
-        <a href="{{ url_for('orders.create') }}" class="btn btn-primary btn-sm">
-            New order
-        </a>
-
-    </div>
 </div>
 
 {% if orders %}
@@ -23,43 +22,94 @@
 <div class="bg-white border rounded shadow-sm overflow-hidden">
 
     <table class="table table-hover align-middle mb-0">
+
         <thead class="table-light">
             <tr>
                 <th>Id</th>
                 <th>Client</th>
-                <th>Date ordered</th>
-                <th>Date confirmed</th>
-                <th>Date shipped</th>
+                <th>Ordered</th>
+                <th>Confirmed</th>
+                <th>Shipped</th>
                 <th>Status</th>
                 <th>Total</th>
-                <th>Total VAT</th>
+                <th>VAT total</th>
                 <th class="text-end">Actions</th>
             </tr>
         </thead>
+
         <tbody>
             {% for order in orders %}
             <tr>
-                <td>{{ order.id }}</td>
-                <td>{{ order.client.firstname }} {{ order.client.surname }}</td>
-                <td>{{ order.date_ordered.strftime('%Y-%m-%d -- %H:%M') }}</td>
-                <td>{{ order.date_confirmed.strftime('%Y-%m-%d -- %H:%M') if order.date_confirmed else "not yet confirmed" }}</td>
-                <td>{{ order.date_shipped.strftime('%Y-%m-%d -- %H:%M') if order.date_shipped else "not yet shipped" }}</td>
-                <td>{{ order.status }}</td>
-                <td>{{ order.total_price/100 if order.total_price else 0 }} &euro;</td>
-                <td>{{ order.total_price_vat/100 if order.total_price_vat else 0 }} &euro;</td>
+
+                <td class="fw-semibold">
+                    {{ order.id }}
+                </td>
+
+                <td>
+                    {{ order.client.firstname }} {{ order.client.surname }}
+                </td>
+
+                <td>
+                    {{ order.date_ordered.strftime('%Y-%m-%d %H:%M') }}
+                </td>
+
+                <td>
+                    {% if order.date_confirmed %}
+                        {{ order.date_confirmed.strftime('%Y-%m-%d %H:%M') }}
+                    {% else %}
+                        <span class="text-muted">-</span>
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if order.date_shipped %}
+                        {{ order.date_shipped.strftime('%Y-%m-%d %H:%M') }}
+                    {% else %}
+                        <span class="text-muted">-</span>
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if order.status == "pending" %}
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    {% elif order.status == "shipped" %}
+                        <span class="badge bg-success">Shipped</span>
+                    {% elif order.status == "cancelled" %}
+                        <span class="badge bg-danger">Cancelled</span>
+                    {% else %}
+                        <span class="badge bg-secondary">{{ order.status }}</span>
+                    {% endif %}
+                </td>
+
+                <td>
+                    {{ (order.total_price or 0) / 100 }} €
+                </td>
+
+                <td>
+                    {{ (order.total_price_vat or 0) / 100 }} €
+                </td>
+
                 <td class="text-end">
-                    <a href="{{ url_for('orders.show', order_id=order.id) }}" 
-                    class="btn btn-sm btn-outline-secondary">
-                    View
+
+                    <a href="{{ url_for('orders.show', order_id=order.id) }}"
+                       class="btn btn-sm btn-outline-secondary">
+                        View
                     </a>
-                    <form action="{{ url_for('orders.delete', order_id=order.id) }}" method="POST" class="d-inline">
-                        <button type="submit" 
+
+                    <form action="{{ url_for('orders.delete', order_id=order.id) }}"
+                          method="POST"
+                          class="d-inline">
+
+                        <button type="submit"
                                 class="btn btn-sm btn-outline-danger"
                                 onclick="return confirm('Delete {{ order.id }}?')">
-                                Delete
+                            Delete
                         </button>
+
                     </form>
+
                 </td>
+
             </tr>
             {% endfor %}
         </tbody>
@@ -71,8 +121,10 @@
 {% else %}
 
 <p class="text-muted">
-    No orders yet. <a href="{{ url_for('orders.create') }}">Create one</a>.
+    No orders yet.
+    <a href="{{ url_for('orders.create') }}">Create one</a>.
 </p>
+
 {% endif %}
 
 {% endblock %}

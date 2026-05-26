@@ -4,30 +4,31 @@
 {% block content %}
 
 <div class="d-flex justify-content-between align-items-end mb-4">
+
     <div>
         <h1 class="mb-0">Clients</h1>
-        <div class="text-muted small">Manage your client(s)</div>
+        <div class="text-muted small">Manage your clients</div>
     </div>
 
     <div class="d-flex align-items-center gap-3">
 
         <form action="{{ url_for('clients.search') }}" method="post" class="m-0">
             <div class="input-group input-group-sm">
-                <input
-                    type="text"
-                    class="form-control"
-                    name="client_name"
-                    placeholder="Search..."
-                />
+                <input type="text"
+                       class="form-control"
+                       name="client_name"
+                       placeholder="Search...">
                 <button class="btn btn-outline-secondary" type="submit">🔍</button>
             </div>
         </form>
 
-        <a href="{{ url_for('clients.create') }}" class="btn btn-primary btn-sm">
+        <a href="{{ url_for('clients.create') }}"
+           class="btn btn-primary btn-sm">
             New client
         </a>
 
     </div>
+
 </div>
 
 {% if clients %}
@@ -35,12 +36,13 @@
 <div class="bg-white border rounded shadow-sm overflow-hidden">
 
     <table class="table table-hover align-middle mb-0">
+
         <thead class="table-light">
             <tr>
                 <th>Firstname</th>
                 <th>Surname</th>
                 <th>Email</th>
-                <th>Active</th>
+                <th>Status</th>
                 <th class="text-end">Actions</th>
             </tr>
         </thead>
@@ -48,11 +50,29 @@
         <tbody>
             {% for client in clients %}
             <tr>
-                <td>{{ client.firstname }}</td>
-                <td class="text-muted">{{ client.surname }}</td>
-                <td class="text-muted">{{ client.email }}</td>
-                <td>{{"active" if client.active else "not active"}}</td>
+
+                <td class="fw-semibold">
+                    {{ client.firstname }}
+                </td>
+
+                <td>
+                    {{ client.surname }}
+                </td>
+
+                <td class="text-muted">
+                    {{ client.email }}
+                </td>
+
+                <td>
+                    {% if client.active %}
+                        <span class="badge bg-success">Active</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Inactive</span>
+                    {% endif %}
+                </td>
+
                 <td class="text-end">
+
                     <a href="{{ url_for('clients.show', client_id=client.id) }}"
                        class="btn btn-sm btn-outline-secondary">
                         View
@@ -61,13 +81,17 @@
                     <form action="{{ url_for('clients.delete', client_id=client.id) }}"
                           method="POST"
                           class="d-inline">
+
                         <button type="submit"
                                 class="btn btn-sm btn-outline-danger"
                                 onclick="return confirm('Delete {{ client.firstname }} {{ client.surname }}?')">
                             Delete
                         </button>
+
                     </form>
+
                 </td>
+
             </tr>
             {% endfor %}
         </tbody>
@@ -79,7 +103,8 @@
 {% else %}
 
 <p class="text-muted">
-    No clients yet. <a href="{{ url_for('clients.create') }}">Create one</a>.
+    No clients yet.
+    <a href="{{ url_for('clients.create') }}">Create one</a>.
 </p>
 
 {% endif %}

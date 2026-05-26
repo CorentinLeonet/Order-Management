@@ -1,7 +1,36 @@
 {% extends "base.html" %}
 
+{% block title %}404 - Page not found<{% endblock %}
+
 {% block content %}
-<h1>404 - Page not found</h1>
-<a href="{{ url_for('main.index') }}">Go back home</a>
-<p>{{ error }}</p>
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 60vh;">
+
+    <div class="text-center">
+
+        <div class="display-6 fw-bold mb-2">
+            404
+        </div>
+
+        <div class="text-muted mb-4">
+            Page not found
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <p class="mb-0 text-muted">
+                    {{ error }}
+                </p>
+            </div>
+        </div>
+
+        <a href="{{ url_for('main.index') }}"
+           class="btn btn-primary mt-4">
+            Go back home
+        </a>
+
+    </div>
+
+</div>
+
 {% endblock %}

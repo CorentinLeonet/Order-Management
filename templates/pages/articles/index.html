@@ -2,31 +2,33 @@
 {% block title %}Articles{% endblock %}
 
 {% block content %}
+
 <div class="d-flex justify-content-between align-items-end mb-4">
+
     <div>
         <h1 class="mb-0">Articles</h1>
-        <div class="text-muted small">Manage your article(s)</div>
+        <div class="text-muted small">Manage your articles</div>
     </div>
 
     <div class="d-flex align-items-center gap-3">
 
         <form action="{{ url_for('articles.search') }}" method="post" class="m-0">
             <div class="input-group input-group-sm">
-                <input
-                    type="text"
-                    class="form-control"
-                    name="article_name"
-                    placeholder="Search..."
-                />
+                <input type="text"
+                       class="form-control"
+                       name="article_name"
+                       placeholder="Search...">
                 <button class="btn btn-outline-secondary" type="submit">🔍</button>
             </div>
         </form>
 
-        <a href="{{ url_for('articles.create') }}" class="btn btn-primary btn-sm">
+        <a href="{{ url_for('articles.create') }}"
+           class="btn btn-primary btn-sm">
             New article
         </a>
 
     </div>
+
 </div>
 
 {% if articles %}
@@ -34,6 +36,7 @@
 <div class="bg-white border rounded shadow-sm overflow-hidden">
 
     <table class="table table-hover align-middle mb-0">
+
         <thead class="table-light">
             <tr>
                 <th>Name</th>
@@ -41,7 +44,7 @@
                 <th>Stock</th>
                 <th>Categories</th>
                 <th>VAT</th>
-                <th>Active</th>
+                <th>Status</th>
                 <th class="text-end">Actions</th>
             </tr>
         </thead>
@@ -49,43 +52,75 @@
         <tbody>
             {% for article in articles %}
             <tr>
-                <td>{{ article.name }}</td>
-                <td class="text-muted">{{ article.price/100 }} &euro;</td>
-                <td class="text-muted">{{ article.stock_quantity }}</td>
-                <td class="text-muted">
-                    {%for category in article.categories%}
-                        {{ category.name }}
-                    {%endfor%}
+
+                <td class="fw-semibold">
+                    {{ article.name }}
                 </td>
-                <td>{{ article.vat }}%</td>
-                <td class="text-muted">{{"active" if article.active else "not active"}}</td>
+
+                <td>
+                    {{ (article.price / 100) }} €
+                </td>
+
+                <td>
+                    {{ article.stock_quantity }}
+                </td>
+
+                <td class="text-muted">
+                    {% for category in article.categories %}
+                        <span class="badge bg-light text-dark border">
+                            {{ category.name }}
+                        </span>
+                    {% endfor %}
+                </td>
+
+                <td>
+                    {{ article.vat }}%
+                </td>
+
+                <td>
+                    {% if article.active %}
+                        <span class="badge bg-success">Active</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Inactive</span>
+                    {% endif %}
+                </td>
+
                 <td class="text-end">
-                    <a href="{{ url_for('articles.show', article_id=article.id) }}" 
+
+                    <a href="{{ url_for('articles.show', article_id=article.id) }}"
                        class="btn btn-sm btn-outline-secondary">
-                       View
+                        View
                     </a>
 
-                    <form action="{{ url_for('articles.delete', article_id=article.id) }}" 
-                          method="POST" 
+                    <form action="{{ url_for('articles.delete', article_id=article.id) }}"
+                          method="POST"
                           class="d-inline">
-                        <button type="submit" 
+
+                        <button type="submit"
                                 class="btn btn-sm btn-outline-danger"
                                 onclick="return confirm('Delete {{ article.name }}?')">
-                                Delete
+                            Delete
                         </button>
+
                     </form>
+
                 </td>
+
             </tr>
             {% endfor %}
         </tbody>
+
     </table>
+
 </div>
 
 {% else %}
 
 <p class="text-muted">
-    No articles yet. <a href="{{ url_for('articles.create') }}">Create one</a>.
+    No articles yet.
+    <a href="{{ url_for('articles.create') }}">Create one</a>.
 </p>
+
 {% endif %}
 
 {% endblock %}

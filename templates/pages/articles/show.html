@@ -2,55 +2,110 @@
 {% block title %}{{ article.name }}{% endblock %}
 
 {% block content %}
+
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="mb-0">{{ article.name }}</h1>
-    <a href="{{ url_for('articles.index') }}" class="btn btn-outline-secondary">Back</a>
-</div>
-
-<div class="card">
-    <div class="card-body">
-        <p class="text-muted mb-1">Price</p>
-        <p>{{ article.price/100 or 0 }} &euro;</p>
+    <div>
+        <h1 class="mb-0">{{ article.name }}</h1>
+        <div class="text-muted small">Article details</div>
     </div>
+
+    <a href="{{ url_for('articles.index') }}"
+       class="btn btn-outline-secondary">
+        Back
+    </a>
 </div>
 
-<div class="card">
-    <div class="card-body">
-        <p class="text-muted mb-1">Stock quantity</p>
-        <p>{{ article.stock_quantity or 0 }}</p>
+<div class="row g-3">
+
+    <!-- Main info -->
+    <div class="col-12 col-lg-8">
+
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+
+                <div class="row g-4">
+
+                    <div class="col-6">
+                        <div class="text-muted small mb-1">Price</div>
+                        <div class="fs-5 fw-semibold">
+                            {{ article.price / 100 or 0 }} €
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="text-muted small mb-1">Stock quantity</div>
+                        <div class="fs-5 fw-semibold">
+                            {{ article.stock_quantity or 0 }}
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="text-muted small mb-1">VAT</div>
+                        <div class="fs-5 fw-semibold">
+                            {{ article.vat }}%
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="text-muted small mb-1">Status</div>
+
+                        {% if article.active %}
+                            <span class="badge bg-success">Active</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Inactive</span>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
     </div>
-</div>
 
-<div class="card">
-    <div class="card-body">
-        <p class="text-muted mb-1">Categories</p>
-        <li>
-            {%for category in article.categories%}
-            <p>{{ category.name }}</p>
-            {%endfor%}
-        </li>
+    <!-- Categories -->
+    <div class="col-12 col-lg-4">
+
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+
+                <div class="text-muted small mb-3">
+                    Categories
+                </div>
+
+                {% if article.categories %}
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for category in article.categories %}
+                            <span class="badge bg-light text-dark border">
+                                {{ category.name }}
+                            </span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted mb-0">No categories</p>
+                {% endif %}
+
+            </div>
+        </div>
+
     </div>
+
 </div>
 
-<div class="card">
-    <div class="card-body">
-        <p class="text-muted mb-1">VAT</p>
-        <p>{{ article.vat }}%</p>
-    </div>
-</div>
+<div class="mt-4 d-flex gap-2">
+    <a href="{{ url_for('articles.edit', article_id=article.id) }}"
+       class="btn btn-primary">
+        Edit
+    </a>
 
-<div class="card">
-    <div class="card-body">
-        <p class="text-muted mb-1">Active</p>
-        <p>{{ "active" if article.active else "not active" }}</p>
-    </div>
-</div>
-
-<div class="mt-3 d-flex gap-2">
-    <a href="{{ url_for('articles.edit', article_id=article.id) }}" class="btn btn-primary">Edit</a>
-    <form action="{{ url_for('articles.delete', article_id=article.id) }}" method="POST">
-        <button type="submit" class="btn btn-outline-danger"
-            onclick="return confirm('Delete {{ article.name }}?')">Delete</button>
+    <form action="{{ url_for('articles.delete', article_id=article.id) }}"
+          method="POST">
+        <button type="submit"
+                class="btn btn-outline-danger"
+                onclick="return confirm('Delete {{ article.name }}?')">
+            Delete
+        </button>
     </form>
 </div>
+
 {% endblock %}
