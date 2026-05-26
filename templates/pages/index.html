@@ -16,9 +16,8 @@
 {% block content %}
 
 <!-- Header -->
-<div class="p-4 mb-4 bg-dark text-white rounded shadow-sm">
-    <h1 class="mb-1">Order Management</h1>
-    <div class="text-white-50">Dashboard overview</div>
+<div class="p-4 mb-4">
+    <h1 class="mb-1">Dashboard</h1>
 </div>
 
 <!-- Stats -->
@@ -61,7 +60,6 @@
             <a href="{{ url_for('orders.create') }}" class="text-decoration-none">
                 <div class="p-3 bg-white border rounded shadow-sm h-100">
                     <div class="fw-semibold text-dark">New order</div>
-                    <div class="text-muted small">Create an order</div>
                 </div>
             </a>
         </div>
@@ -70,7 +68,6 @@
             <a href="{{ url_for('articles.create') }}" class="text-decoration-none">
                 <div class="p-3 bg-white border rounded shadow-sm h-100">
                     <div class="fw-semibold text-dark">New article</div>
-                    <div class="text-muted small">Add a product</div>
                 </div>
             </a>
         </div>
@@ -79,7 +76,6 @@
             <a href="{{ url_for('clients.create') }}" class="text-decoration-none">
                 <div class="p-3 bg-white border rounded shadow-sm h-100">
                     <div class="fw-semibold text-dark">New client</div>
-                    <div class="text-muted small">Register customer</div>
                 </div>
             </a>
         </div>
@@ -88,7 +84,6 @@
             <a href="{{ url_for('categories.create') }}" class="text-decoration-none">
                 <div class="p-3 bg-white border rounded shadow-sm h-100">
                     <div class="fw-semibold text-dark">New category</div>
-                    <div class="text-muted small">Organize products</div>
                 </div>
             </a>
         </div>
@@ -96,36 +91,41 @@
 </div>
 
 <!-- Charts -->
-<div class="row g-3">
+<div class="mb-3"></div>
 
-    <div class="col-12 col-md-6 col-lg-3">
-        <div class="p-3 bg-white border rounded shadow-sm h-100">
-            <div class="fw-semibold mb-2">Order status</div>
-            <div id="pie_chart_orders"></div>
+<div class="text-uppercase text-muted small mb-2">Stats</div>
+
+    <div class="row g-3">
+        
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="p-3 bg-white border rounded shadow-sm h-100">
+                <div class="fw-semibold mb-2">Order status</div>
+                <div id="pie_chart_orders"></div>
+            </div>
         </div>
-    </div>
 
-    <div class="col-12 col-md-6 col-lg-3">
-        <div class="p-3 bg-white border rounded shadow-sm h-100">
-            <div class="fw-semibold mb-2">Articles sold</div>
-            <div id="pie_chart_articles"></div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="p-3 bg-white border rounded shadow-sm h-100">
+                <div class="fw-semibold mb-2">Articles sold</div>
+                <div id="pie_chart_articles"></div>
+            </div>
         </div>
-    </div>
 
-    <div class="col-12 col-md-6 col-lg-3">
-        <div class="p-3 bg-white border rounded shadow-sm h-100">
-            <div class="fw-semibold mb-2">Clients activity</div>
-            <div id="pie_chart_clients"></div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="p-3 bg-white border rounded shadow-sm h-100">
+                <div class="fw-semibold mb-2">Clients activity</div>
+                <div id="pie_chart_clients"></div>
+            </div>
         </div>
-    </div>
 
-    <div class="col-12 col-md-6 col-lg-3">
-        <div class="p-3 bg-white border rounded shadow-sm h-100">
-            <div class="fw-semibold mb-2">Categories</div>
-            <div id="pie_chart_categories"></div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="p-3 bg-white border rounded shadow-sm h-100">
+                <div class="fw-semibold mb-2">Categories</div>
+                <div id="pie_chart_categories"></div>
+            </div>
         </div>
-    </div>
 
+    </div>
 </div>
 
 {% endblock %}
