@@ -1,85 +1,131 @@
 {% extends "base.html" %}
+
 {% block headscripts %}
-<!--Load the AJAX API for google charts-->
 <script src="https://www.gstatic.com/charts/loader.js"></script>
+
 {% from 'partials/charts/pie_chart.html' import create_pie_chart %}
 
-{{ create_pie_chart("pie_chart_orders", "Order satus", order_pie_chart_rows)}}
-{{ create_pie_chart("pie_chart_articles", "Qty sold by Article", article_pie_chart_rows)}}
-{{ create_pie_chart("pie_chart_clients", "Nbr of Order by Client", client_pie_chart_rows)}}
-{{ create_pie_chart("pie_chart_categories", "Nbr of Article by Category", category_pie_chart_rows)}}
-
+{{ create_pie_chart("pie_chart_orders", "Order status", order_pie_chart_rows) }}
+{{ create_pie_chart("pie_chart_articles", "Qty sold by Article", article_pie_chart_rows) }}
+{{ create_pie_chart("pie_chart_clients", "Orders by Client", client_pie_chart_rows) }}
+{{ create_pie_chart("pie_chart_categories", "Articles by Category", category_pie_chart_rows) }}
 {% endblock %}
+
 {% block title %}Dashboard{% endblock %}
+
 {% block content %}
-<h1 class="mb-1">Order Management</h1>
-<p class="text-bold mb-4">Dashboard</p>
 
+<!-- Header -->
+<div class="p-4 mb-4 bg-dark text-white rounded shadow-sm">
+    <h1 class="mb-1">Order Management</h1>
+    <div class="text-white-50">Dashboard overview</div>
+</div>
 
-
+<!-- Stats -->
 <div class="row g-3 mb-4">
-    <div class="col-3">
-        <div class="p-3 bg-light rounded">
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="p-3 bg-white border rounded shadow-sm">
             <div class="text-muted small">Orders</div>
-            <div class="fs-3 fw-500">{{ order_count }}</div>
+            <div class="fs-3 fw-semibold">{{ order_count }}</div>
         </div>
     </div>
-    <div class="col-3">
-        <div class="p-3 bg-light rounded">
+
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="p-3 bg-white border rounded shadow-sm">
             <div class="text-muted small">Articles</div>
-            <div class="fs-3 fw-500">{{ article_count }}</div>
+            <div class="fs-3 fw-semibold">{{ article_count }}</div>
         </div>
     </div>
-    <div class="col-3">
-        <div class="p-3 bg-light rounded">
+
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="p-3 bg-white border rounded shadow-sm">
             <div class="text-muted small">Clients</div>
-            <div class="fs-3 fw-500">{{ client_count }}</div>
+            <div class="fs-3 fw-semibold">{{ client_count }}</div>
         </div>
     </div>
-    <div class="col-3">
-        <div class="p-3 bg-light rounded">
+
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="p-3 bg-white border rounded shadow-sm">
             <div class="text-muted small">Categories</div>
-            <div class="fs-3 fw-500">{{ category_count }}</div>
+            <div class="fs-3 fw-semibold">{{ category_count }}</div>
         </div>
     </div>
 </div>
 
-<h6 class="text-uppercase text-muted mb-3">Quick actions</h6>
-<div class="row g-3">
-    <div class="col-3">
-        <a href="{{ url_for('orders.create') }}" class="text-decoration-none">
-            <div class="p-3 border rounded">New order</div>
-        </a>
-    </div>
-    <div class="col-3">
-        <a href="{{ url_for('articles.create') }}" class="text-decoration-none">
-            <div class="p-3 border rounded">New article</div>
-        </a>
-    </div>
-    <div class="col-3">
-        <a href="{{ url_for('clients.create') }}" class="text-decoration-none">
-            <div class="p-3 border rounded">New client</div>
-        </a>
-    </div>
-    <div class="col-3">
-        <a href="{{ url_for('categories.create') }}" class="text-decoration-none">
-            <div class="p-3 border rounded">New category</div>
-        </a>
+<!-- Quick actions -->
+<div class="mb-3">
+    <div class="text-uppercase text-muted small mb-2">Quick actions</div>
+
+    <div class="row g-3">
+        <div class="col-12 col-md-6 col-lg-3">
+            <a href="{{ url_for('orders.create') }}" class="text-decoration-none">
+                <div class="p-3 bg-white border rounded shadow-sm h-100">
+                    <div class="fw-semibold text-dark">New order</div>
+                    <div class="text-muted small">Create an order</div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-3">
+            <a href="{{ url_for('articles.create') }}" class="text-decoration-none">
+                <div class="p-3 bg-white border rounded shadow-sm h-100">
+                    <div class="fw-semibold text-dark">New article</div>
+                    <div class="text-muted small">Add a product</div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-3">
+            <a href="{{ url_for('clients.create') }}" class="text-decoration-none">
+                <div class="p-3 bg-white border rounded shadow-sm h-100">
+                    <div class="fw-semibold text-dark">New client</div>
+                    <div class="text-muted small">Register customer</div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-3">
+            <a href="{{ url_for('categories.create') }}" class="text-decoration-none">
+                <div class="p-3 bg-white border rounded shadow-sm h-100">
+                    <div class="fw-semibold text-dark">New category</div>
+                    <div class="text-muted small">Organize products</div>
+                </div>
+            </a>
+        </div>
     </div>
 </div>
 
+<!-- Charts -->
 <div class="row g-3">
-    <div class="col-3">
-        <div id="pie_chart_orders"></div>
+
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="p-3 bg-white border rounded shadow-sm h-100">
+            <div class="fw-semibold mb-2">Order status</div>
+            <div id="pie_chart_orders"></div>
+        </div>
     </div>
-    <div class="col-3">
-        <div id="pie_chart_articles"></div>
+
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="p-3 bg-white border rounded shadow-sm h-100">
+            <div class="fw-semibold mb-2">Articles sold</div>
+            <div id="pie_chart_articles"></div>
+        </div>
     </div>
-    <div class="col-3">
-        <div id="pie_chart_clients"></div>
+
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="p-3 bg-white border rounded shadow-sm h-100">
+            <div class="fw-semibold mb-2">Clients activity</div>
+            <div id="pie_chart_clients"></div>
+        </div>
     </div>
-    <div class="col-3">
-        <div id="pie_chart_categories"></div>
+
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="p-3 bg-white border rounded shadow-sm h-100">
+            <div class="fw-semibold mb-2">Categories</div>
+            <div id="pie_chart_categories"></div>
+        </div>
     </div>
+
 </div>
+
 {% endblock %}

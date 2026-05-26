@@ -2,58 +2,86 @@
 {% block title %}Articles{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="mb-0">Articles</h1>
-    <a href="{{ url_for('articles.create') }}" class="btn btn-primary">New article</a>
-</div>
+<div class="d-flex justify-content-between align-items-end mb-4">
+    <div>
+        <h1 class="mb-0">Articles</h1>
+        <div class="text-muted small">Manage your article(s)</div>
+    </div>
 
-{% if articles %}
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Stock</th>
-            <th>Categories</th>
-            <th></th>
-        </tr>
-        <form action="{{ url_for('articles.search') }}" method="post">
-            <div class="mb-3">
+    <div class="d-flex align-items-center gap-3">
+
+        <form action="{{ url_for('articles.search') }}" method="post" class="m-0">
+            <div class="input-group input-group-sm">
                 <input
                     type="text"
                     class="form-control"
                     name="article_name"
-                    id="search_article"
-                    aria-describedby="helpId"
-                    placeholder="search"
+                    placeholder="Search..."
                 />
+                <button class="btn btn-outline-secondary" type="submit">🔍</button>
             </div>
-            <button type="submit">Search</button>
         </form>
-    </thead>
-    <tbody>
-        {% for article in articles %}
-        <tr>
-            <td>{{ article.name }}</td>
-            <td class="text-muted">{{ article.price/100 }} &euro;</td>
-            <td class="text-muted">{{ article.stock_quantity }}</td>
-            <td class="text-muted">
-                {%for category in article.categories%}
-                {{ category.name }}
-                {%endfor%}
-            </td>
-            <td class="text-end">
-                <a href="{{ url_for('articles.show', article_id=article.id) }}" class="btn btn-sm btn-outline-secondary">View</a>
-                <form action="{{ url_for('articles.delete', article_id=article.id) }}" method="POST" class="d-inline">
-                    <button type="submit" class="btn btn-sm btn-outline-danger"
-                        onclick="return confirm('Delete {{ article.name }}?')">Delete</button> <!-- modal -->
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+
+        <a href="{{ url_for('articles.create') }}" class="btn btn-primary btn-sm">
+            New article
+        </a>
+
+    </div>
+</div>
+
+{% if articles %}
+
+<div class="bg-white border rounded shadow-sm overflow-hidden">
+
+    <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Categories</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for article in articles %}
+            <tr>
+                <td>{{ article.name }}</td>
+                <td class="text-muted">{{ article.price/100 }} &euro;</td>
+                <td class="text-muted">{{ article.stock_quantity }}</td>
+                <td class="text-muted">
+                    {%for category in article.categories%}
+                        {{ category.name }}
+                    {%endfor%}
+                </td>
+                <td class="text-end">
+                    <a href="{{ url_for('articles.show', article_id=article.id) }}" 
+                       class="btn btn-sm btn-outline-secondary">
+                       View
+                    </a>
+
+                    <form action="{{ url_for('articles.delete', article_id=article.id) }}" 
+                          method="POST" 
+                          class="d-inline">
+                        <button type="submit" 
+                                class="btn btn-sm btn-outline-danger"
+                                onclick="return confirm('Delete {{ article.name }}?')">
+                                Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
 {% else %}
-<p class="text-muted">No articles yet. <a href="{{ url_for('articles.create') }}">Create one</a>.</p>
+
+<p class="text-muted">
+    No articles yet. <a href="{{ url_for('articles.create') }}">Create one</a>.
+</p>
 {% endif %}
+
 {% endblock %}

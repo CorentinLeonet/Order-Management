@@ -2,50 +2,82 @@
 {% block title %}Categories{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="mb-0">Categories</h1>
-    <a href="{{ url_for('categories.create') }}" class="btn btn-primary">New category</a>
-</div>
 
-{% if categories %}
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th></th>
-        </tr>
-        <form action="{{ url_for('categories.search') }}" method="post">
-            <div class="mb-3">
+<div class="d-flex justify-content-between align-items-end mb-4">
+    <div>
+        <h1 class="mb-0">Categories</h1>
+        <div class="text-muted small">Manage your category(ies)</div>
+    </div>
+
+    <div class="d-flex align-items-center gap-3">
+
+        <form action="{{ url_for('categories.search') }}" method="post" class="m-0">
+            <div class="input-group input-group-sm">
                 <input
                     type="text"
                     class="form-control"
                     name="category_name"
-                    id="search_article"
-                    aria-describedby="helpId"
-                    placeholder="search"
+                    placeholder="Search..."
                 />
+                <button class="btn btn-outline-secondary" type="submit">🔍</button>
             </div>
-            <button type="submit">Search</button>
         </form>
-    </thead>
-    <tbody>
-        {% for category in categories %}
-        <tr>
-            <td>{{ category.name }}</td>
-            <td class="text-muted">{{ category.description }}</td>
-            <td class="text-end">
-                <a href="{{ url_for('categories.show', category_id=category.id) }}" class="btn btn-sm btn-outline-secondary">View</a>
-                <form action="{{ url_for('categories.delete', category_id=category.id) }}" method="POST" class="d-inline">
-                    <button type="submit" class="btn btn-sm btn-outline-danger"
-                        onclick="return confirm('Delete {{ category.name }}?')">Delete</button> <!-- modal -->
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+
+        <a href="{{ url_for('categories.create') }}" class="btn btn-primary btn-sm">
+            New category
+        </a>
+
+    </div>
+</div>
+
+
+{% if categories %}
+
+<div class="bg-white border rounded shadow-sm overflow-hidden">
+
+    <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in categories %}
+            <tr>
+                <td>{{ category.name }}</td>
+                <td class="text-muted">{{ category.description }}</td>
+                <td class="text-end">
+                    <a href="{{ url_for('categories.show', category_id=category.id) }}" 
+                    class="btn btn-sm btn-outline-secondary">
+                    View
+                    </a>
+
+                    <form action="{{ url_for('categories.delete', category_id=category.id) }}" 
+                        method="POST" 
+                        class="d-inline">
+                        <button type="submit" 
+                                class="btn btn-sm btn-outline-danger"
+                                onclick="return confirm('Delete {{ category.name }}?')">
+                                Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+</div>
+
 {% else %}
-<p class="text-muted">No categories yet. <a href="{{ url_for('categories.create') }}">Create one</a>.</p>
+
+<p class="text-muted">
+    No categories yet. <a href="{{ url_for('categories.create') }}">Create one</a>.
+</p>
+
 {% endif %}
+
 {% endblock %}

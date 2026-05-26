@@ -23,11 +23,17 @@
       // Set chart options
       var options = {
                       title:"{{chart_title}}",
-                      width:"relvative",
-                      height: 500,
+                      width:"100%",
+                      height: "100%",
                       sliceVisibilityThreshold:0,
                       bar: {groupWidth: "relative"},
                       legend: { position: "none" },
+                      chartArea: {
+                        left: 50,
+                        top: 50,
+                        width: "85%",
+                        height: "70%"
+                      },
                       animation: {
                         startup : true,
                         duration: 1000,
