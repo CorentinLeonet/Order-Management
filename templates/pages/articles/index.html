@@ -40,6 +40,7 @@
                 <th>Price</th>
                 <th>Stock</th>
                 <th>Categories</th>
+                <th>VAT</th>
                 <th>Active</th>
                 <th class="text-end">Actions</th>
             </tr>
@@ -56,6 +57,7 @@
                         {{ category.name }}
                     {%endfor%}
                 </td>
+                <td>{{ article.vat }}%</td>
                 <td class="text-muted">{{"active" if article.active else "not active"}}</td>
                 <td class="text-end">
                     <a href="{{ url_for('articles.show', article_id=article.id) }}" 

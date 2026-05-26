@@ -34,6 +34,13 @@
 
 <div class="card">
     <div class="card-body">
+        <p class="text-muted mb-1">VAT</p>
+        <p>{{ article.vat }}%</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
         <p class="text-muted mb-1">Active</p>
         <p>{{ "active" if article.active else "not active" }}</p>
     </div>

@@ -34,10 +34,11 @@ def create():
         price = request.form["price"]
         price = int(float(price) * 100)
         stock_quantity = request.form["stock_quantity"]
+        vat = request.form["vat"]
         categories_id = request.form.getlist("categories_id")
         if categories_id:
             categories = [categories_repository.get_category_by_id(g.session, int(category_id)) for category_id in categories_id]
-            article = articles_repository.create_article(g.session, name, price, stock_quantity, categories)
+            article = articles_repository.create_article(g.session, name, price, stock_quantity, categories, vat)
             success = f"article {article.name} was successfully created"
             flash(success, "success")
             return redirect(url_for('articles.index'))
@@ -67,6 +68,7 @@ def update(article_id: int):
     price = request.form["price"]
     price = int(float(price) * 100)
     stock_quantity = request.form["stock_quantity"]
+    vat = request.form["vat"]
     if request.form.get("active"):
         active = True
     else:
@@ -74,7 +76,7 @@ def update(article_id: int):
     categories_id = request.form.getlist("categories_id")
     if categories_id:
         categories = [categories_repository.get_category_by_id(g.session, int(category_id)) for category_id in categories_id]
-        if articles_repository.update_article(g.session, article, name, price, stock_quantity, categories, active):
+        if articles_repository.update_article(g.session, article, name, price, stock_quantity, categories, vat, active):
             success = f"article {article.name} was successfully updated"
         else:
             error = "error in the form"

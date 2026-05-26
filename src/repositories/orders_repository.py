@@ -43,6 +43,13 @@ def get_total_price(session: Session, order: Order):
         return session.execute(stmt).scalar_one_or_none()
     except Exception as e:
         print(e)
+        
+def get_total_price_vat(session: Session, order: Order):
+    try:
+        stmt = select(func.sum(Order_Line.unit_price * Order_Line.quantity * (1 + (Order_Line.vat/100)))).where(Order_Line.order_id == order.id)
+        return session.execute(stmt).scalar_one_or_none()
+    except Exception as e:
+        print(e)
 
 
 def get_shipped_orders(session: Session):
@@ -100,7 +107,7 @@ def update_order_add_line(session: Session, order: Order, article: Article, quan
             article.stock_quantity -= quantity
             existing_order_line.quantity += quantity
         else: # if not add a line
-            order_line = Order_Line(order_id=order.id, article_id=article.id, quantity=quantity, unit_price=article.price)
+            order_line = Order_Line(order_id=order.id, article_id=article.id, quantity=quantity, unit_price=article.price, vat=article.vat)
             article.stock_quantity -= quantity
             session.add(order_line)
         session.commit()

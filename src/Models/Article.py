@@ -15,6 +15,8 @@ class Article(Base):
 
     price : Mapped[int] = mapped_column()
 
+    vat:  Mapped[int] = mapped_column()
+
     stock_quantity : Mapped[int] = mapped_column() 
 
     categories : Mapped[list["Category"]] = relationship(

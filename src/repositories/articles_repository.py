@@ -4,9 +4,9 @@ from src.Models.Article import Article
 from src.Models.Order_Line import Order_Line
 
 
-def create_article(session: Session, name: str, price: int, stock_quantity: int, categories: list) -> Article:
+def create_article(session: Session, name: str, price: int, stock_quantity: int, categories: list, vat:int) -> Article:
     try:
-        article = Article(name=name, price=price, stock_quantity=stock_quantity, categories=categories)
+        article = Article(name=name, price=price, stock_quantity=stock_quantity, categories=categories, vat=vat)
         session.add(article)
         session.commit()
         session.refresh(article)
@@ -58,12 +58,13 @@ def delete_article(session: Session, article: Article) -> None:
         return False
     return True
 
-def update_article(session: Session, article: Article, name: str, price: int, stock_quantity: int, categories: list, active : bool):
+def update_article(session: Session, article: Article, name: str, price: int, stock_quantity: int, categories: list, vat: int, active : bool):
     try:
         article.name = name
         article.price = price
         article.stock_quantity = stock_quantity
         article.categories = categories
+        article.vat = vat
         article.active = active
         session.commit()
     except Exception  as e:

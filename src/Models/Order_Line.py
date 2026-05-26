@@ -25,6 +25,9 @@ class Order_Line(Base):
     unit_price : Mapped[int] = mapped_column(
         CheckConstraint("unit_price >= 0")
     )
+    
+    vat : Mapped[int] = mapped_column()
+
     article = relationship('Article')
 
     def __init__(self, **kw: Any):

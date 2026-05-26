@@ -13,7 +13,12 @@ orders_bp = Blueprint('orders', __name__)
 def index():
     orders = orders_repository.get_all_orders(g.session)
     for order in orders:
+        total_price_vat = orders_repository.get_total_price_vat(g.session, order)
         order.total_price = orders_repository.get_total_price(g.session, order)
+        if total_price_vat:
+            order.total_price_vat = round(total_price_vat, 2)
+        else:
+            order.total_price_vat = 0
     return render_template('pages/orders/index.html', orders=orders)
 
 @orders_bp.route("/orders/<int:order_id>")
@@ -22,9 +27,14 @@ def show(order_id: int):
     if order is None:
         return render_template('pages/errors/404.html'), 404
     total_price = orders_repository.get_total_price(g.session, order)
+    total_price_vat = orders_repository.get_total_price_vat(g.session, order)
+    if total_price_vat:
+            total_price_vat = round(total_price_vat, 2)
+    else:
+        total_price_vat = 0
     if total_price is None:
         total_price = 0
-    return render_template('pages/orders/show.html', order=order, total_price=total_price)
+    return render_template('pages/orders/show.html', order=order, total_price=total_price, total_price_vat=total_price_vat)
 
 @orders_bp.route("/orders/new", methods=["GET", "POST"])
 def create():
@@ -192,22 +202,29 @@ def bill(order_id: int):
     pdf.cell(30, 8, "Unit price", border=1)
     pdf.cell(30, 8, "Quantity", border=1)
     pdf.cell(40, 8, "Total", border=1, ln=True)
+    pdf.cell(40, 8, "Total VAT", border=1, ln=True)
 
     # table rows
     pdf.set_font("DejaVuSerif", "", 11)
     total = 0
+    total_vat = 0
     for line in order.order_lines:
         line_total = line.unit_price * line.quantity
+        line_total_vat = line_total * (1 + line.vat/100)
         total += line_total
+        total_vat += line_total_vat 
         pdf.cell(80, 8, line.article.name, border=1)
         pdf.cell(30, 8, str(line.unit_price/100) + EURO, border=1)
         pdf.cell(30, 8, str(line.quantity), border=1)
         pdf.cell(40, 8, str(line_total/100) + EURO, border=1, ln=True)
+        pdf.cell(40, 8, str(line_total_vat/100) + EURO, border=1, ln=True)
 
     # total
     pdf.set_font("DejaVuSerif", "B", 11)
     pdf.cell(140, 8, "Total", border=1)
     pdf.cell(40, 8, str(total/100) + EURO, border=1, ln=True)
+    pdf.cell(140, 8, "Total VAT", border=1)
+    pdf.cell(40, 8, str(total_vat/100) + EURO, border=1, ln=True)
 
     # send as file download
     pdf_bytes = pdf.output()
