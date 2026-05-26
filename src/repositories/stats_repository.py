@@ -87,6 +87,8 @@ def get_articles_count_sales(session: Session):
             Article.name, func.sum(Order_Line.quantity)
             ).join(
                 Order_Line, onclause=Order_Line.article_id == Article.id
+            ).join(
+                Order, onclause=Order_Line.order_id == Order.id
             ).where(
                 Order.status != Order_Status_Enum.CANCELLED.value
             ).group_by(
