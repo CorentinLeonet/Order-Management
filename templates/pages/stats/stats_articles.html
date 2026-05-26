@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block headscripts %}
+<!--Load the AJAX API for google charts-->
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+{% from 'partials/charts/pie_chart.html' import create_pie_chart %}
+
+{{ create_pie_chart("column_chart_day", "", stats_day)}}
+{{ create_pie_chart("column_chart_month", "", stats_month)}}
+{{ create_pie_chart("column_chart_year", "", stats_year)}}
+{% endblock %}
+
+{% block title %}Articles Stats{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <div class="mb-4 p-3 bg-white border rounded shadow-sm">
+        <h5 class="mb-3">Articles sold today</h5>
+        <div id="column_chart_day" style="height: 320px;"></div>
+    </div>
+
+    <div class="mb-4 p-3 bg-white border rounded shadow-sm">
+        <h5 class="mb-3">Articles sold this month</h5>
+        <div id="column_chart_month" style="height: 320px;"></div>
+    </div>
+
+    <div class="mb-4 p-3 bg-white border rounded shadow-sm">
+        <h5 class="mb-3">Articles sold this year</h5>
+        <div id="column_chart_year" style="height: 320px;"></div>
+    </div>
+
+</div>
+{% endblock %}

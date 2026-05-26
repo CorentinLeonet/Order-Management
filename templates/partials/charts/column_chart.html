@@ -10,15 +10,17 @@
   // instantiates the pie chart, passes in the data and
   // draws it.
   function drawChart() {
-
+    
       // Create the data table.
       var data = new google.visualization.DataTable();
       data.addColumn('string', 'Topping');
         data.addColumn('number', '{{legend}}');
       array = []
-      {% for row in rows %}
-        array.push([ "{{row[0]}}", {{row[1]}} ])
-      {% endfor %}
+      {% if rows %}
+        {% for row in rows %}
+          array.push([ "{{row[0]}}", {{row[1]}} ])
+        {% endfor %}
+      {% endif %}
       data.addRows(array)
       // Set chart options
       var options = {

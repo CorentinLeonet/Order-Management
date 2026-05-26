@@ -16,9 +16,11 @@
       data.addColumn('string', 'Topping');
         data.addColumn('number', 'Slices');
       array = []
-      {% for row in rows %}
-        array.push([ "{{row[0]}}", {{row[1]}} ])
-      {% endfor %}
+      {% if rows %}
+        {% for row in rows %}
+          array.push([ "{{row[0]}}", {{row[1]}} ])
+        {% endfor %}
+      {% endif %}
       data.addRows(array)
       // Set chart options
       var options = {'title':"{{chart_title}}",

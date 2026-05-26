@@ -37,11 +37,6 @@ class Order(Base):
     )
 
     status : Mapped[str] = mapped_column()
-    # status : Mapped[Order_Status_Enum] = mapped_column(
-    #     EnumSQL(Order_Status_Enum, name="status")
-    #     nullable = False
-    #     unique = False
-    # )
 
     __table_args__ = (
         CheckConstraint("date_confirmed >= date_ordered"),

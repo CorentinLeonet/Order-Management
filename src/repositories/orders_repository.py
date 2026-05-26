@@ -166,18 +166,3 @@ def remove_line(session: Session, order_line: Order_Line) -> bool:
         print(e)
         return False
     return True
-
-def get_orders_by_day(session: Session):
-    day = func.DATE_TRUNC("day", Order.date_ordered)
-    stmt = select(day, func.count(Order.id)).group_by(day)
-    return session.execute(stmt).fetchall()
-
-def get_orders_by_month(session: Session):
-    month = func.DATE_TRUNC("month", Order.date_ordered)
-    stmt = select(month, func.count(Order.id)).group_by(month)
-    return session.execute(stmt).fetchall()
-
-def get_orders_by_year(session: Session):
-    year = func.DATE_TRUNC("year", Order.date_ordered)
-    stmt = select(year, func.count(Order.id)).group_by(year)
-    return session.execute(stmt).fetchall()
