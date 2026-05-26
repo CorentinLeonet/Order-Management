@@ -62,7 +62,11 @@ def update(client_id: int):
     surname = request.form["surname"]
     email = request.form["email"]
     date_of_creation = request.form["date_of_creation"]
-    if clients_repository.update_client(g.session, client, firstname, surname, email, date_of_creation):
+    if request.form.get("active"):
+        active = True
+    else:
+        active = False
+    if clients_repository.update_client(g.session, client, firstname, surname, email, date_of_creation, active):
         success = f"client {firstname} {surname} was successfully updated"
     else:
         error = f"client {firstname} {surname} could not be updated"

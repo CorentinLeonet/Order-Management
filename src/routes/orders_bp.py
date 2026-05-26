@@ -41,7 +41,7 @@ def create():
         if error: flash(error, "error")
         if success: flash(success, "success")
         return redirect(url_for('orders.index'))
-    clients = clients_repository.get_all_clients(g.session)
+    clients = clients_repository.get_all_active_clients(g.session)
     return render_template('pages/orders/new.html', clients=clients)
 
 @orders_bp.route("/orders/<int:order_id>/delete", methods=["POST"])
@@ -62,7 +62,7 @@ def edit(order_id: int):
     order = orders_repository.get_order_by_id(g.session, order_id)
     if order is None:
         return render_template('pages/errors/404.html'), 404
-    articles = articles_repository.get_all_articles(g.session)
+    articles = articles_repository.get_all_active_articles(g.session)
     match order.status:
         case Order_Status_Enum.PENDING.value:
             all_status = [Order_Status_Enum.PENDING.value, Order_Status_Enum.CONFIRMED.value, Order_Status_Enum.CANCELLED.value]

@@ -13,6 +13,8 @@
         <p>{{ client.email}}</p>
         <label class="text-muted mb-1">Date of creation</label>
         <p>{{client.date_of_creation}}</p>
+        <label class="text-muted mb-1">Active</label>
+        <p>{{ "active" if client.active else "not active" }}</p>
     </div>
 </div>
 

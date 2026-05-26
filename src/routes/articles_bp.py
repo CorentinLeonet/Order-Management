@@ -45,7 +45,7 @@ def create():
             error = "Select at least one category"
     if error: flash(error, "error")
     if message: flash(message, "message")
-    categories = categories_repository.get_all_categories(g.session)
+    categories = categories_repository.get_all_active_categories(g.session)
     return render_template('pages/articles/new.html', categories=categories)
 
 @articles_bp.route("/articles/<int:article_id>/edit")
@@ -53,7 +53,7 @@ def edit(article_id: int):
     article = articles_repository.get_article_by_id(g.session, article_id)
     if article is None:
         return render_template('pages/errors/404.html'), 404
-    categories = categories_repository.get_all_categories(g.session)
+    categories = categories_repository.get_all_active_categories(g.session)
     return render_template('pages/articles/edit.html', article=article, categories=categories)
 
 @articles_bp.route("/articles/<int:article_id>/update", methods=["POST"], )
@@ -67,10 +67,14 @@ def update(article_id: int):
     price = request.form["price"]
     price = int(float(price) * 100)
     stock_quantity = request.form["stock_quantity"]
+    if request.form.get("active"):
+        active = True
+    else:
+        active = False
     categories_id = request.form.getlist("categories_id")
     if categories_id:
         categories = [categories_repository.get_category_by_id(g.session, int(category_id)) for category_id in categories_id]
-        if articles_repository.update_article(g.session, article, name, price, stock_quantity, categories):
+        if articles_repository.update_article(g.session, article, name, price, stock_quantity, categories, active):
             success = f"article {article.name} was successfully updated"
         else:
             error = "error in the form"

@@ -28,6 +28,13 @@ def get_all_articles(session: Session) -> list[Article]:
     except Exception as e:
         print(e)
 
+def get_all_active_articles(session: Session) -> list[Article]:
+    try:
+        stmt = select(Article).where(Article.active == True)
+        return session.execute(stmt).scalars().all()
+    except Exception as e:
+        print(e)
+
 def get_count_articles(session: Session) -> int:
     try: 
         stmt = select(func.count(Article.id))
@@ -35,13 +42,6 @@ def get_count_articles(session: Session) -> int:
     except Exception as e:
         print(e)
 
-def get_articles_count_sales(session: Session):
-    try: 
-        stmt = select(Article.name, func.sum(Order_Line.quantity)).join(Order_Line, onclause=Order_Line.article_id == Article.id).group_by(Article.name)
-        return session.execute(stmt).fetchall()
-    except Exception as e:
-        print(e)
-        
 def get_all_articles_by_name(session: Session, article_name: str):
     try:
         stmt = select(Article).where(Article.name.ilike("%" + article_name + "%"))
@@ -58,12 +58,13 @@ def delete_article(session: Session, article: Article) -> None:
         return False
     return True
 
-def update_article(session: Session, article: Article, name: str, price: int, stock_quantity: int, categories: list):
+def update_article(session: Session, article: Article, name: str, price: int, stock_quantity: int, categories: list, active : bool):
     try:
         article.name = name
         article.price = price
         article.stock_quantity = stock_quantity
         article.categories = categories
+        article.active = active
         session.commit()
     except Exception  as e:
         print(e)

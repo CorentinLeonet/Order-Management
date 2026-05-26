@@ -29,17 +29,17 @@ def get_all_clients(session: Session) -> list[Client]:
     except Exception as e:
         print(e)
 
+def get_all_active_clients(session: Session) -> list[Client]:
+    try:
+        stmt = select(Client).where(Client.active == True)
+        return session.execute(stmt).scalars().all()
+    except Exception as e:
+        print(e)
+
 def get_count_clients(session: Session) -> int:
     try: 
         stmt = select(func.count(Client.id))
         return session.execute(stmt).scalar_one_or_none()
-    except Exception as e:
-        print(e)
-
-def get_clients_count_orders(session: Session):
-    try: 
-        stmt = select(func.concat(Client.firstname, Client.surname), func.count(Order.id)).where(Order.client_id == Client.id).group_by(func.concat(Client.firstname, Client.surname), Client.id)
-        return session.execute(stmt).fetchall()
     except Exception as e:
         print(e)
 
@@ -51,12 +51,13 @@ def get_all_clients_by_name(session: Session, client_name: str):
         print(e)
 
 
-def update_client(session: Session, client:Client, firstname: str, surname: str, email: str, date_of_creation: datetime):
+def update_client(session: Session, client:Client, firstname: str, surname: str, email: str, date_of_creation: datetime, active: bool):
     try:
         client.firstname = firstname
         client.surname = surname
         client.email = email
         client.date_of_creation = date_of_creation
+        client.active = active
         session.commit()
     except Exception as e:
         print(e)

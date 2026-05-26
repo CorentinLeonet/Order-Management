@@ -22,6 +22,10 @@ class Article(Base):
         secondary="article_categories"
     )
 
+    active : Mapped[bool] = mapped_column(
+        default=True
+    )
+
     __table_args__ = (
         CheckConstraint("price >= 0"),
         CheckConstraint("stock_quantity >= 0")

@@ -40,6 +40,7 @@
             <tr>
                 <th>Name</th>
                 <th>Description</th>
+                <th>Active</th>
                 <th class="text-end">Actions</th>
             </tr>
         </thead>
@@ -48,6 +49,7 @@
             <tr>
                 <td>{{ category.name }}</td>
                 <td class="text-muted">{{ category.description }}</td>
+                <td>{{"active" if category.active else "not active"}}</td>
                 <td class="text-end">
                     <a href="{{ url_for('categories.show', category_id=category.id) }}" 
                     class="btn btn-sm btn-outline-secondary">

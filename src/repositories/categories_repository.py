@@ -42,17 +42,17 @@ def get_all_categories(session: Session) -> list[Category]:
     except Exception as e:
         print(e)
 
+def get_all_active_categories(session: Session) -> list[Category]:
+    try:
+        stmt = select(Category).where(Category.active == True)
+        return session.execute(stmt).scalars().all()
+    except Exception as e:
+        print(e)
+
 def get_count_categories(session: Session) -> int:
     try: 
         stmt = select(func.count(Category.id))
         return session.execute(stmt).scalar_one_or_none()
-    except Exception as e:
-        print(e)
-
-def get_categories_count_articles(session: Session):
-    try: 
-        stmt = select(Category.name, func.count(Article_Category.article_id)).where(Article_Category.category_id == Category.id).group_by(Category.name)
-        return session.execute(stmt).fetchall()
     except Exception as e:
         print(e)
 
@@ -78,10 +78,11 @@ def delete_category_by_id(session: Session, id: int) -> bool:
         return False
     return True
 
-def update_category(session: Session, category: Category, name: str, description: str) -> bool:
+def update_category(session: Session, category: Category, name: str, description: str, active: bool) -> bool:
     try:
         category.name = name
         category.description = description
+        category.active = active
         session.commit()
     except Exception as e:
         print(e)

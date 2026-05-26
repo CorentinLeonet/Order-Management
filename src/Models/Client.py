@@ -23,5 +23,9 @@ class Client(Base):
         DateTime
     )
 
+    active : Mapped[bool] = mapped_column(
+        default=True
+    )
+
     def __init__(self, **kw: Any):
         super().__init__(**kw)

@@ -40,6 +40,7 @@
                 <th>Firstname</th>
                 <th>Surname</th>
                 <th>Email</th>
+                <th>Active</th>
                 <th class="text-end">Actions</th>
             </tr>
         </thead>
@@ -50,6 +51,7 @@
                 <td>{{ client.firstname }}</td>
                 <td class="text-muted">{{ client.surname }}</td>
                 <td class="text-muted">{{ client.email }}</td>
+                <td>{{"active" if client.active else "not active"}}</td>
                 <td class="text-end">
                     <a href="{{ url_for('clients.show', client_id=client.id) }}"
                        class="btn btn-sm btn-outline-secondary">

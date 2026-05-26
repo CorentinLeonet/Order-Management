@@ -73,13 +73,6 @@ def get_confirmed_orders(session: Session):
     except Exception as e:
         print(e)
 
-def get_orders_grouped_by_status(session: Session):
-    try:
-        stmt = select(Order.status, func.count(Order.id)).group_by(Order.status)
-        return session.execute(stmt).fetchall()
-    except Exception as e:
-        print(e)
-
 def update_order(session: Session, order: Order, client_id : int, date_ordered : datetime, status: str, date_shipped: datetime, date_confirmed : datetime) :
     try:
         if status == Order_Status_Enum.CANCELLED.value and order.status != Order_Status_Enum.CANCELLED.value: #check if status is cancelled and readd the stock of article automaticaly but only if the previous status was cancelled already

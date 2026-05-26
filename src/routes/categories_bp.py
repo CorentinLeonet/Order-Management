@@ -57,7 +57,11 @@ def update(category_id: int):
         return render_template('pages/errors/404.html'), 404
     name = request.form["name"]
     description = request.form["description"]
-    if categories_repository.update_category(g.session, category, name, description):
+    if request.form.get("active"):
+        active = True
+    else:
+        active = False
+    if categories_repository.update_category(g.session, category, name, description, active):
         success = f"category {name} was successfully updated"
     else:
         error = f"could not update category {name}"
