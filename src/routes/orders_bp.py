@@ -85,7 +85,8 @@ def edit(order_id: int):
     return render_template('pages/orders/edit.html',
         order=order,
         articles=articles,
-        all_status=all_status
+        all_status=all_status,
+        today=datetime.now()
     )
 
 @orders_bp.route("/orders/<int:order_id>/update", methods=["POST"])
@@ -96,16 +97,15 @@ def update(order_id: int):
     if order is None:
         return render_template('pages/errors/404.html'), 404
     status = request.form["status"]
-    date_confirmed = order.date_confirmed
-    date_shipped = order.date_shipped
-    if order.date_shipped is None:
-        date_shipped = request.form.get("date_shipped") or None
-        if date_shipped:
-            date_shipped = datetime.fromisoformat(date_shipped)
-    if order.date_confirmed is None:
-        date_confirmed = request.form.get("date_confirmed") or None
-        if date_confirmed:
-            date_confirmed = datetime.fromisoformat(date_confirmed)
+
+    date_shipped = request.form.get("date_shipped") or None
+    if date_shipped:
+        date_shipped = datetime.fromisoformat(date_shipped)
+
+    date_confirmed = request.form.get("date_confirmed") or None
+    if date_confirmed:
+        date_confirmed = datetime.fromisoformat(date_confirmed)
+
     if status != order.status:
         if status == Order_Status_Enum.CONFIRMED.value:
             date_confirmed = datetime.now()
