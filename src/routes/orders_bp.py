@@ -11,7 +11,15 @@ orders_bp = Blueprint('orders', __name__)
 
 @orders_bp.route("/orders")
 def index():
-    orders = orders_repository.get_all_orders(g.session)
+    page = request.args.get("page", 1, type=int)
+    per_page = 10
+
+    orders, total = orders_repository.get_orders_paginated(g.session, page, per_page)
+
+    has_next = page * per_page < total
+    has_prev = page > 1
+    total_pages = (total + per_page - 1) // per_page
+
     for order in orders:
         total_price_vat = orders_repository.get_total_price_vat(g.session, order)
         order.total_price = orders_repository.get_total_price(g.session, order)
@@ -19,7 +27,15 @@ def index():
             order.total_price_vat = round(total_price_vat)
         else:
             order.total_price_vat = 0
-    return render_template('pages/orders/index.html', orders=orders)
+    return render_template(
+        'pages/orders/index.html',
+        orders=orders,
+        page=page,
+        has_next=has_next,
+        has_prev=has_prev,
+        total_pages=total_pages,
+    )
+
 
 @orders_bp.route("/orders/<int:order_id>")
 def show(order_id: int):

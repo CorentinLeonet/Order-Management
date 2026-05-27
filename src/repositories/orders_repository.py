@@ -30,6 +30,27 @@ def get_all_orders(session: Session) -> list[Order]:
     except Exception as e:
         print(e)
 
+def get_orders_paginated(session: Session, page: int, per_page: int = 10):
+    try:
+        stmt = select(
+                    Order
+                ).order_by(
+                    Order.id.desc()
+                ).offset(
+                    (page - 1) * per_page
+                ).limit(
+                    per_page
+                )
+        items = session.execute(stmt).scalars().all()
+        stmt2 = select(
+                    func.count(Order.id)
+                )
+        total = session.execute(stmt2).scalar()
+        return items, total
+    except Exception as e:
+        print(e)
+
+
 def get_count_orders(session: Session) -> int:
     try:
         stmt = select(func.count(Order.id))
