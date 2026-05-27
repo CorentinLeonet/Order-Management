@@ -58,7 +58,7 @@ def create():
     error = None
     if request.method == "POST":
         client_id = request.form["client_id"]
-        date_ordered = datetime.now()
+        date_ordered = datetime.now().replace(microsecond=0, second=0)
         order = orders_repository.create_order(g.session, client_id, date_ordered)
         if order:
             success = f"Order was successfully created"
@@ -102,7 +102,7 @@ def edit(order_id: int):
         order=order,
         articles=articles,
         all_status=all_status,
-        today=datetime.now()
+        today=datetime.now().replace(microsecond=0, second=0)
     )
 
 @orders_bp.route("/orders/<int:order_id>/update", methods=["POST"])
@@ -124,9 +124,9 @@ def update(order_id: int):
 
     if status != order.status:
         if status == Order_Status_Enum.CONFIRMED.value:
-            date_confirmed = datetime.now()
+            date_confirmed = datetime.now().replace(microsecond=0, second=0)
         elif status == Order_Status_Enum.SHIPPED.value:
-            date_shipped = datetime.now()
+            date_shipped = datetime.now().replace(microsecond=0, second=0)
    
     if orders_repository.update_order(g.session, order,
         order.client_id, order.date_ordered,
