@@ -4,19 +4,34 @@ from datetime import datetime
 
 clients_bp = Blueprint('clients', __name__)
 
-@clients_bp.route("/clients")
+@clients_bp.route("/clients", methods=["GET"])
 def index():
-    clients = clients_repository.get_all_clients(g.session)
-    return render_template('pages/clients/index.html', clients=clients)
+    page = request.args.get("page", 1, type=int)
+    per_page = 10
+    search = request.args.get("client_name")
 
-@clients_bp.route("/clients", methods=["POST"])
-def search():
-    client_name = request.form["client_name"]
-    if client_name:
-        clients = clients_repository.get_all_clients_by_name(g.session, client_name)
-    else: 
-        clients = clients_repository.get_all_clients(g.session)
-    return render_template('pages/clients/index.html', clients=clients)
+    if search:
+        clients, total = clients_repository.get_clients_paginated(
+            g.session, page, per_page, search
+        )
+    else:
+        clients, total = clients_repository.get_clients_paginated(
+            g.session, page, per_page
+        )
+
+    has_next = page * per_page < total
+    has_prev = page > 1
+    total_pages = (total + per_page - 1) // per_page
+
+    return render_template(
+        "pages/clients/index.html",
+        clients=clients,
+        page=page,
+        has_next=has_next,
+        has_prev=has_prev,
+        total_pages=total_pages,
+        search=search
+    )
 
 @clients_bp.route("/clients/<int:client_id>")
 def show(client_id: int):

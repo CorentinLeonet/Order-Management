@@ -6,17 +6,32 @@ articles_bp = Blueprint('articles', __name__)
 
 @articles_bp.route("/articles", methods=["GET"])
 def index():
-    articles = articles_repository.get_all_articles(g.session)
-    return render_template('pages/articles/index.html', articles=articles)
+    page = request.args.get("page", 1, type=int)
+    per_page = 10
+    search = request.args.get("article_name")
 
-@articles_bp.route("/articles", methods=["POST"])
-def search():
-    article_name = request.form["article_name"]
-    if article_name:
-        articles = articles_repository.get_all_articles_by_name(g.session, article_name)
-    else: 
-        articles = articles_repository.get_all_articles(g.session)
-    return render_template('pages/articles/index.html', articles=articles)
+    if search:
+        articles, total = articles_repository.get_articles_paginated(
+            g.session, page, per_page, search
+        )
+    else:
+        articles, total = articles_repository.get_articles_paginated(
+            g.session, page, per_page
+        )
+
+    has_next = page * per_page < total
+    has_prev = page > 1
+    total_pages = (total + per_page - 1) // per_page
+
+    return render_template(
+        "pages/articles/index.html",
+        articles=articles,
+        page=page,
+        has_next=has_next,
+        has_prev=has_prev,
+        total_pages=total_pages,
+        search=search
+    )
 
 @articles_bp.route("/articles/<int:article_id>")
 def show(article_id: int):

@@ -17,11 +17,11 @@
 
 </div>
 
-<form action="{{ url_for('articles.update', article_id=article.id) }}" method="POST">
+<form action="{{ url_for('articles.update', article_id=article.id) }}"
+      method="POST">
 
     <div class="row g-3">
 
-        <!-- Main fields -->
         <div class="col-12 col-lg-8">
 
             <div class="card shadow-sm">
@@ -90,7 +90,6 @@
 
         </div>
 
-        <!-- Categories -->
         <div class="col-12 col-lg-4">
 
             <div class="card shadow-sm">
@@ -127,7 +126,6 @@
 
     </div>
 
-    <!-- Actions -->
     <div class="mt-4 d-flex gap-2">
 
         <button type="submit" class="btn btn-primary">
@@ -137,12 +135,5 @@
     </div>
 
 </form>
-
-{% if message %}
-<div class="mt-3">
-    {% from "partials/message.html" import display_message %}
-    {{ display_message(message) }}
-</div>
-{% endif %}
 
 {% endblock %}

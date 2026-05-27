@@ -12,7 +12,7 @@
 
     <div class="d-flex align-items-center gap-3">
 
-        <form action="{{ url_for('articles.search') }}" method="post" class="m-0">
+        <form action="{{ url_for('articles.index') }}" method="get" class="m-0">
             <div class="input-group input-group-sm">
                 <input type="text"
                        class="form-control"
@@ -111,6 +111,9 @@
         </tbody>
 
     </table>
+
+    {% from "partials/nav_pagination.html" import display_nav_pagination %}
+    {{ display_nav_pagination(page, has_prev, has_next, total_pages) }}
 
 </div>
 

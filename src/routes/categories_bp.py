@@ -3,19 +3,34 @@ import src.repositories.categories_repository as categories_repository
 
 categories_bp = Blueprint('categories', __name__)
 
-@categories_bp.route("/categories")
+@categories_bp.route("/categories", methods=["GET"])
 def index():
-    categories = categories_repository.get_all_categories(g.session)
-    return render_template('pages/categories/index.html', categories=categories)
+    page = request.args.get("page", 1, type=int)
+    per_page = 10
+    search = request.args.get("category_name")
 
-@categories_bp.route("/categories", methods=["POST"])
-def search():
-    category_name = request.form["category_name"]
-    if category_name:
-        categories = categories_repository.get_all_categories_by_name(g.session, category_name)
-    else: 
-        categories = categories_repository.get_all_categories(g.session)
-    return render_template('pages/categories/index.html', categories=categories)
+    if search:
+        categories, total = categories_repository.get_categories_paginated(
+            g.session, page, per_page, search
+        )
+    else:
+        categories, total = categories_repository.get_categories_paginated(
+            g.session, page, per_page
+        )
+
+    has_next = page * per_page < total
+    has_prev = page > 1
+    total_pages = (total + per_page - 1) // per_page
+
+    return render_template(
+        "pages/categories/index.html",
+        categories=categories,
+        page=page,
+        has_next=has_next,
+        has_prev=has_prev,
+        total_pages=total_pages,
+        search=search
+    )
 
 @categories_bp.route("/categories/<int:category_id>")
 def show(category_id: int):

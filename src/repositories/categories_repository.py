@@ -42,6 +42,31 @@ def get_all_categories(session: Session) -> list[Category]:
     except Exception as e:
         print(e)
 
+def get_categories_paginated(session: Session, page: int, per_page: int = 10, category_name=""):
+    try:
+        stmt = select(
+                    Category
+                ).where(
+                    Category.name.ilike("%" + category_name + "%")
+                ).order_by(
+                    Category.id.desc()
+                ).offset(
+                    (page - 1) * per_page
+                ).limit(
+                    per_page
+                )
+        items = session.execute(stmt).scalars().all()
+        stmt2 = select(
+                    func.count(Category.id)
+                ).where(
+                    Category.name.ilike(f"%{category_name}%")
+                )
+        total = session.execute(stmt2).scalar()
+
+        return items, total
+    except Exception as e:
+        print(e)
+
 def get_all_active_categories(session: Session) -> list[Category]:
     try:
         stmt = select(Category).where(Category.active == True)

@@ -27,6 +27,32 @@ def get_all_articles(session: Session) -> list[Article]:
         return session.execute(stmt).scalars().all()
     except Exception as e:
         print(e)
+    
+def get_articles_paginated(session: Session, page: int, per_page: int = 10, article_name=""):
+    try:
+        stmt = select(
+                    Article
+                ).where(
+                    Article.name.ilike("%" + article_name + "%")
+                ).order_by(
+                    Article.id.desc()
+                ).offset(
+                    (page - 1) * per_page
+                ).limit(
+                    per_page
+                )
+        items = session.execute(stmt).scalars().all()
+        stmt2 = select(
+                    func.count(Article.id)
+                ).where(
+                    Article.name.ilike(f"%{article_name}%")
+                )
+        total = session.execute(stmt2).scalar()
+
+        return items, total
+    except Exception as e:
+        print(e)
+
 
 def get_all_active_articles(session: Session) -> list[Article]:
     try:

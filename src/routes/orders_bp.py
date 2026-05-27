@@ -16,7 +16,7 @@ def index():
         total_price_vat = orders_repository.get_total_price_vat(g.session, order)
         order.total_price = orders_repository.get_total_price(g.session, order)
         if total_price_vat:
-            order.total_price_vat = round(total_price_vat, 2)
+            order.total_price_vat = round(total_price_vat)
         else:
             order.total_price_vat = 0
     return render_template('pages/orders/index.html', orders=orders)
@@ -29,10 +29,10 @@ def show(order_id: int):
     total_price = orders_repository.get_total_price(g.session, order)
     total_price_vat = orders_repository.get_total_price_vat(g.session, order)
     if total_price_vat:
-            total_price_vat = round(total_price_vat, 2)
+            total_price_vat = round(total_price_vat)
     else:
         total_price_vat = 0
-    if total_price is None:
+    if not total_price:
         total_price = 0
     return render_template('pages/orders/show.html', order=order, total_price=total_price, total_price_vat=total_price_vat)
 

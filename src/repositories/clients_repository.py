@@ -29,6 +29,31 @@ def get_all_clients(session: Session) -> list[Client]:
     except Exception as e:
         print(e)
 
+def get_clients_paginated(session: Session, page: int, per_page: int = 10, client_name=""):
+    try:
+        stmt = select(
+                    Client
+                ).where(
+                    Client.surname.ilike("%" + client_name + "%")
+                ).order_by(
+                    Client.id.desc()
+                ).offset(
+                    (page - 1) * per_page
+                ).limit(
+                    per_page
+                )
+        items = session.execute(stmt).scalars().all()
+        stmt2 = select(
+                    func.count(Client.id)
+                ).where(
+                    Client.surname.ilike(f"%{client_name}%")
+                )
+        total = session.execute(stmt2).scalar()
+
+        return items, total
+    except Exception as e:
+        print(e)
+
 def get_all_active_clients(session: Session) -> list[Client]:
     try:
         stmt = select(Client).where(Client.active == True)
