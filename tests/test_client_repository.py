@@ -24,7 +24,7 @@ def test_read_client(session, client):
     assert fetched_client.date_of_creation == CLIENT_DATE
 
 def test_update_client(session, client):
-    assert clients_repository.update_client(session, client, client_new_firstname, client_new_surname, client_new_email, client_new_date) == True
+    assert clients_repository.update_client(session, client, client_new_firstname, client_new_surname, client_new_email, client_new_date, True) == True
     assert client.firstname == client_new_firstname
     assert client.surname == client_new_surname
     assert client.email == client_new_email

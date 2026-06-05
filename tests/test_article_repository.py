@@ -12,6 +12,7 @@ category_description = "Test description"
 article_new_name = "article__new_test"
 article_new_price = 100
 article_new_stock_quantity = 1000
+article_new_vat = 21
 
 def test_create_article(session, article):
     assert article.name == ARTICLE_NAME
@@ -25,7 +26,7 @@ def test_read_article(session, article):
     assert fetched_article.name == ARTICLE_NAME
 
 def test_update_article(session, article):
-    assert articles_repository.update_article(session, article, article_new_name, article_new_price, article_new_stock_quantity, article.categories) == True
+    assert articles_repository.update_article(session, article, article_new_name, article_new_price, article_new_stock_quantity, article.categories, article_new_vat, True) == True
     assert article.name == article_new_name
     assert article.price == article_new_price
     assert article.stock_quantity == article_new_stock_quantity

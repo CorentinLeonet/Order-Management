@@ -15,7 +15,7 @@ def test_read_category(session, category):
     assert fetched.name == CATEGORY_NAME
 
 def test_update_category(session, category):
-    assert categories_repository.update_category(session, category, category_new_name, category_new_description) == True
+    assert categories_repository.update_category(session, category, category_new_name, category_new_description, True) == True
     assert category.name == category_new_name
     assert category.description == category_new_description
 

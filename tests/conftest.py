@@ -28,6 +28,7 @@ def session():
 ARTICLE_NAME = "article_test"
 ARTICLE_PRICE = 10
 ARTICLE_STOCK = 100
+ARTICLE_VAT = 21
 
 CATEGORY_NAME = "cat"
 CATEGORY_DESCRIPTION = "desc"
@@ -45,7 +46,7 @@ def category(session):
 
 @pytest.fixture
 def article(session, category):
-    return articles_repository.create_article(session, ARTICLE_NAME, ARTICLE_PRICE, ARTICLE_STOCK, [category])
+    return articles_repository.create_article(session, ARTICLE_NAME, ARTICLE_PRICE, ARTICLE_STOCK, [category], ARTICLE_VAT)
 
 @pytest.fixture
 def client(session):
