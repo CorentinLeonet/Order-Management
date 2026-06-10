@@ -164,9 +164,9 @@ def delete_order_by_id(session: Session, id: int) -> bool:
 
         if order is None:
             return False
-        for order_Line in order.order_lines: #refill the article stock
-            order_Line.article.stock_quantity += order_Line.quantity
-            session.delete(order_Line)
+        for order_line in order.order_lines: #refill the article stock
+            order_line.article.stock_quantity += order_line.quantity
+            session.delete(order_line)
         session.delete(order)
         session.commit()
     except Exception as e:

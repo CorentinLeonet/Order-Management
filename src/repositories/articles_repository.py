@@ -75,7 +75,7 @@ def get_all_articles_by_name(session: Session, article_name: str):
     except Exception as e:
         print(e)
 
-def delete_article(session: Session, article: Article) -> None:
+def delete_article(session: Session, article: Article) -> bool:
     try:
         session.delete(article)
         session.commit()

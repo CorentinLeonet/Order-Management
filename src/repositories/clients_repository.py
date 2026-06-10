@@ -89,7 +89,7 @@ def update_client(session: Session, client:Client, firstname: str, surname: str,
         return False
     return True
 
-def delete_client(session: Session, client: Client) -> None:
+def delete_client(session: Session, client: Client) -> bool:
     try:
         session.delete(client)
         session.commit()
